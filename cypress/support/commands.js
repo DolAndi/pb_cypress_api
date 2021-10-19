@@ -34,14 +34,54 @@ Cypress.Commands.add("logar", usuario => {
         body: usuario
     })
 })
-Cypress.Commands.add("cadastroCarrinho", (bearer, produto) => {
+Cypress.Commands.add("logarErro", () => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/login`,
+        failOnStatusCode: false,
+        body: {
+            "email": "serginhomalandro@qa.com",
+            "password": "teste"
+          }
+    })
+})
+Cypress.Commands.add("cadastrarUsuario", () =>{
     return cy.request({
         method: "POST",
-        url: `${Cypress.env("base_url")}/carrinho`,
+        url: `${Cypress.env('base_url')}/usuarios`,
         failOnStatusCode: false,
-        body: produto,
-        headers: {
-            Authorization: bearer.replace("bearer", "")
-        }
+        body: {
+            "nome": "Fulano da Silva",
+            "email": "emailmaluquinho42@qa.com.br",
+            "password": "teste",
+            "administrador": "true"
+          }
+    })
+})
+Cypress.Commands.add("cadastrarErro", () =>{
+    return cy.request({
+        method: "POST",
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: {
+            "nome": "Fulano da Silva",
+            "email": "beltrano@qa.com.br",
+            "password": "teste",
+            "administrador": "true"
+          }
+    })
+})
+Cypress.Commands.add("cadastrarProduto", (bearer) =>{
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: {
+            "nome": "caneta muito maluquinha",
+            "preco": 23,
+            "descricao": "canetovski",
+            "quantidade": 13
+          },
+          headers: {Authorization: bearer}
     })
 })
