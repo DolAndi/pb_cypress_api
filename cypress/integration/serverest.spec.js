@@ -16,6 +16,12 @@ describe('Testes na api serverest', () => {
             })
         })
     })
+    it('Deve dar status code(400)"Email e/ou senha inválidos"', ()=>{
+        cy.logarErrado().then(res=>{
+            expect(res.status).to.equal(400)
+        })
+
+    })
 
     it('Deve cadastrar um novo carrinho com sucesso', () => {
         cy.criarCarrinho(bearer)

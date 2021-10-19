@@ -27,6 +27,17 @@ Cypress.Commands.add('logar', usuario => {
         body: usuario
     })
 })
+Cypress.Commands.add('logarErrado', () => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/login`,
+        failOnStatusCode: false,
+        body:{
+            email: 'errado',
+            password: 'errado'
+        }
+    })
+})
 
 Cypress.Commands.add('cadastrarCarrinho', (bearer,produto) => {
     return cy.request({
