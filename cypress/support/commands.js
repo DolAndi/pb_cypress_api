@@ -85,3 +85,18 @@ Cypress.Commands.add("cadastrarProduto", (bearer) =>{
           headers: {Authorization: bearer}
     })
 })
+Cypress.Commands.add("cadastrarProdutoErro", (bearer) =>{
+    return cy.request({
+        method: "POST",
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: {
+            "nome": "Razer Fone",
+            "preco": 299,
+            "descricao": "fone de ouvido",
+            "quantidade": 12
+          },
+          headers: {Authorization: bearer}
+
+    })
+})

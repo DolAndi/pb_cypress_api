@@ -21,13 +21,11 @@ describe("Testes na API ServeRest", () => {
             })
         })
     })
-
     it("Deve possuir status code 401 no login errado", () =>{
         cy.logarErro().then(res => {
             expect(res.status).to.be.equal(401);
         })
     })
-
     it("Deve cadastrar o usuario possuindo status code 201 e propriedade message", () =>{
         cy.cadastrarUsuario().then(res => {
             expect(res.status).to.be.equal(201);
@@ -45,6 +43,11 @@ describe("Testes na API ServeRest", () => {
         cy.cadastrarProduto(bearer).then(res => {
             expect(res.status).to.be.equal(201);
             expect(res.body).has.property("message").equal("Cadastro realizado com sucesso")
+        })
+    })
+    it("Deve dar erro no cadastro de produto possuindo status code 400", () =>{
+        cy.cadastrarProdutoErrado(bearer).then(res => {
+            expect(res.status).to.be.equal(400);
         })
     })
     //it("Deve cadastrar um novo carrinho", () => {
