@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "cy:open": "cypress open",
-    "cy:run":"cypress run",
+    "cy:run": "cypress run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +21,8 @@
   "homepage": "https://github.com/compassoLeonardo/pb_cypress_api#readme",
   "devDependencies": {
     "cypress": "^8.6.0"
+  },
+  "dependencies": {
+    "faker": "^5.5.3"
   }
 }
