@@ -41,32 +41,57 @@ Cypress.Commands.add('logar', usuario => {
         body: usuario,
     })
 })
+
 Cypress.Commands.add('cadastrarProduto', (bearer) => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
         failOnStatusCode: false,
         body:{
-            "nome": "batata colorida",
-            "preco": 445,
-            "descricao": "unicorn",
-            "quantidade": 3
+            "nome": "batata colorida versão 2.0",
+            "preco": 480,
+            "descricao": "tipo unicorn",
+            "quantidade": 7
         },
         headers:{
             Authorization : bearer
         }
     })
 })
+
 Cypress.Commands.add('cadastrarUsuario', () => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/usuarios`,
         failOnStatusCode: false,
         body:{
-            "nome": "ninguém",
-            "email": "ninguem@qa.com.br",
-            "password": "ninguem",
+            "nome": "Outro ninguém",
+            "email": "ninguem.outro@qa.com.br",
+            "password": "ninguemoutro",
             "administrador": "true"
         }
     })
 })
+Cypress.Commands.add('buscarProduto', () => { 
+    cy.request({ 
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false // 4xx ele não irá parar a automação
+    }).then( res => { 
+        for(var i = 0; i < res.body.produtos.length; i++) {
+            return res.body.produtos[i]
+        }
+    })
+})
+Cypress.Commands.add('cadastrarProdutoExistente', (bearer, produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: produto,
+        headers:{
+            Authorization : bearer
+        }
+    })
+})
+    

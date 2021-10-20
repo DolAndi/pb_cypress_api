@@ -3,7 +3,7 @@
 let bearer = ""
 
 
-describe('testes de api serverest', () => { 
+describe('testes de api serverest', () => {
     it('Deve trazer um usuário administrador para login', () => { 
         cy.buscarUsuarioAdmin().then( usuario => { 
             cy.wrap({email: usuario.email, password: usuario.password}).as("usuarioParaLogin")
@@ -36,12 +36,17 @@ describe('testes de api serverest', () => {
     })
 
     it('Não deve cadastrar um produto com o mesmo nome', () => {
-        cy.cadastrarProduto(bearer).then( res => {
-            expect(res.status).to.be.equal(400)
-            expect(res.body).to.not.have.property("_id")
-            expect(res.body.message).to.be.equal("Já existe produto com esse nome")         
+        cy.buscarProduto().then( product => { 
+            cy.wrap({nome: product.nome, preco: product.preco, descricao: product.descricao, quantidade: product.quantidade}).as("produtoExistente")  
+        })
+        cy.get('@produtoExistente').then(produto => {
+            cy.cadastrarProdutoExistente(bearer, produto).then( res => {
+                expect(res.status).to.be.equal(400)
+                expect(res.body).to.not.have.property("_id")
+                expect(res.body.message).to.be.equal("Já existe produto com esse nome")         
         })
     })
+})
 
     it('Deve cadastrar um novo usuario', () => {
         cy.cadastrarUsuario().then( res => {
