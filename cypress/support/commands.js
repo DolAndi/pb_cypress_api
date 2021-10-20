@@ -28,32 +28,23 @@ Cypress.Commands.add('logar', usuario => {
     })
 })
 
-Cypress.Commands.add('loginInvalido', () => {
+Cypress.Commands.add('loginInvalido', usuario => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/login`,
         failOnStatusCode: false,
-        body: {
-            "email": "usuarioinexistente@qa.com",
-            "password": "inexistente"
-          }
+        body: usuario
     })
 })
 
 /************************************************************************/
 
-Cypress.Commands.add('cadastroUsuario', () =>{
+Cypress.Commands.add('cadastroUsuario', (usuarioNovo) =>{
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/usuarios`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Carlos Teste",
-            "email": "carlosteste@qa.com.br",
-            "password": "teste",
-            "administrador": "true"
-          }
-
+        failOnStatusCode: true,
+        body: usuarioNovo,
     })
 })
 
@@ -68,23 +59,17 @@ Cypress.Commands.add('cadastrarUsuarioInvalido', () =>{
             "password": "teste",
             "administrador": "true"
           }
-
     })
 })
 
 /************************************************************************/
 
-Cypress.Commands.add('cadastrarProduto', (bearer) =>{
+Cypress.Commands.add('cadastrarProduto', (bearer, produto) =>{
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Lápiz azul",
-            "preco": 400,
-            "descricao": "Lapis",
-            "quantidade": 400
-          },
+        failOnStatusCode: true,
+        body: produto,
           headers: {Authorization: bearer}
 
     })

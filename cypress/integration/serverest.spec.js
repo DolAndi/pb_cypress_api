@@ -1,20 +1,13 @@
 /// <reference types="cypress" />
 
-var bearer
+import Factory from '../dynamics/factory.js'
 
-// Um cenário positivo e um negativo para os verbos e rotas: 
-// POST: /login => o caso negativo
-// POST: /usuarios
-// POST: /produtos
+var bearer
 
 describe('Testes na api serverest', () => {
     it('Deve trazer um usuário administrador para login', () => {
-        cy.buscarUsuarioAdmin().then( res => {
-            cy.wrap({email: res.email, password: res.password}).as('usuarioParaLogin')
-            // {"email": "fulano@qa.com", "password": "teste"}
-        })
-        cy.get('@usuarioParaLogin').then( user => {
-            cy.logar(user).then( res => {
+        cy.fixture('loginCredentials').then((user) => {
+            cy.logar(user.valido).then( res => {
                 expect(res.status).to.equal(200)
                 expect(res.body).has.property('message').to.be.equal('Login realizado com sucesso')
                 expect(res.body).to.have.property('authorization')
@@ -23,18 +16,41 @@ describe('Testes na api serverest', () => {
         })
     })
 
-    it('Deve mostrar status 401, se o e-mail e/ou senha forem inválidos', () => {
-        cy.loginInvalido().then(res => {
-        expect(res.status).to.be.equal(401);
-        expect(res.body).has.property('message')
-        expect(res.body.message).to.eql('Email e/ou senha inválidos')
+    it('Deve verificar possíveis falhas ao tentar logar no sistema', () => {
+        cy.fixture('loginCredentials').then((user) => {
+            cy.loginInvalido(user.emailEmBranco).then( res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('email')
+                expect(res.body.email).to.be.equal('email não pode ficar em branco')
+            })
+
+            cy.loginInvalido(user.senhaEmBranco).then( res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('password')
+                expect(res.body.password).to.be.equal('password não pode ficar em branco')
+            })
+
+            cy.loginInvalido(user.semCampoEmail).then( res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('email')
+                expect(res.body.email).to.be.equal('email é obrigatório')
+            })
+
+            cy.loginInvalido(user.semCampoSenha).then( res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('password')
+                expect(res.body.password).to.be.equal('password é obrigatório')
+            })
         })
     })
 
-    /************************************************************************/
+    /**********************************************************************************************/
 
     it('Deve cadastrar um novo usuário, e verificar suas propriedades',() =>{
-        cy.cadastroUsuario().then(res => {
+        
+        let usuarioNovo = Factory.gerarNovoUsuario()
+
+        cy.cadastroUsuario(usuarioNovo).then(res => {
             expect(res.status).to.be.equal(201);
             expect(res.body).has.property('message')
             expect(res.body.message).to.be.equal('Cadastro realizado com sucesso')
@@ -42,18 +58,41 @@ describe('Testes na api serverest', () => {
         })
     })
 
-    it('Deve cadastrar um usuário com email ja utilizado, e verificar suas propriedades', () =>{
-        cy.cadastrarUsuarioInvalido().then(res => {
-            expect(res.status).to.be.equal(400);
-            expect(res.body).has.property('message')
-            expect(res.body.message).to.be.equal('Este email já está sendo usado')
-        })
+    it('Deve verificar possíveis falhas ao tentar cadastrar um novo usuário', () =>{
+        cy.fixture('cadastroCredentials').then((user) => {
+            cy.cadastrarUsuarioInvalido(user.nomeEmBranco).then(res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('message')        
+            })
+            
+            cy.cadastrarUsuarioInvalido(user.emailEmBranco).then(res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('message')        
+            })
+
+            cy.cadastrarUsuarioInvalido(user.semCampoEmail).then(res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('message')        
+            })
+
+            cy.cadastrarUsuarioInvalido(user.senhaEmBranco).then(res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('message')        
+            })
+        
+            cy.cadastrarUsuarioInvalido(user.semCampoSenha).then(res => {
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('message')        
+            })
+        })    
     })
 
-    /************************************************************************/
+    /**********************************************************************************************/
 
     it('Deve cadastrar produto com sucesso e verificar suas propriedades ', () =>{
-        cy.cadastrarProduto(bearer).then(res => {
+        let produto = Factory.gerarProdutoBory()
+
+        cy.cadastrarProduto(bearer, produto).then(res => {
             expect(res.status).to.be.equal(201);
             expect(res.body).has.property('message')
             expect(res.body.message).to.be.equal('Cadastro realizado com sucesso')
@@ -61,7 +100,7 @@ describe('Testes na api serverest', () => {
         })
     })
 
-    it('cadastrar produto com nome já existente no sistema, e verificar suas propriedades', () =>{
+    it('Deve cadastrar um produto com nome já existente no sistema, e verificar suas propriedades', () =>{
         cy.produtoEmUso(bearer).then(res => {
             expect(res.status).to.be.equal(400);
             expect(res.body).has.property('message')
