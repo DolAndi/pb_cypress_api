@@ -12,20 +12,17 @@ Cypress.Commands.add('buscarUsuarioAdmin', () => {
         expect(res.body.usuarios).to.be.a('array')
 
         //let listaUsuarios = res.body.usuarios
-        for(var i = 0; i < res.body.usuarios.lenght; i++) {
+        for(var i = 0; i < res.body.usuarios.length; i++) {
             if(res.body.usuarios[i].administrador === 'true' ){
-                cy.log(res.body.usuarios[i])
                 return res.body.usuarios[i]
             }
         }
-
     })
-
 })
 Cypress.Commands.add('logar', usuario => {
     return cy.request({
         method: 'POST',
-        url: `${Cypress.env('base_url')}/usuarios`,
+        url: `${Cypress.env('base_url')}/login`,
         failOnStatusCode: false,
         body: usuario
     })
