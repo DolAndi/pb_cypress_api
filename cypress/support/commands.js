@@ -21,79 +21,27 @@ Cypress.Commands.add('buscarUsuarioAdmin', () => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/login`,
-        failOnSatusCode: true,
+        failOnStatusCode: false,
         body: usuario
     })
  })
- 
- Cypress.Commands.add('naoLogar', () => {
-    return cy.request({
-            method: 'POST',
-            url: `${Cypress.env('base_url')}/login`,
-            failOnStatusCode: false,
-            body: {
-                "email": "piriri@qa.com",
-                "password": "teste"
-              }
-    })
- })
 
- Cypress.Commands.add('cadastrarUsuario', () => {
+ Cypress.Commands.add('cadastrarUsuario', (usuario) => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/usuarios`,
         failOnStatusCode: false,
-        body: {
-            "nome": "Fulanito",
-            "email": "fulanitobe@qa.com.br",
-            "password": "teste",
-            "administrador": "true"
-          }
+        body: usuario
     })
 })
 
-Cypress.Commands.add('naoCadastrarUsuario', () => {
-    return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/usuarios`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Fulanito",
-            "email": "fulanitog@qa.com.br",
-            "password": "teste",
-            "administrador": "true"
-          }
-    })
-})
-
-Cypress.Commands.add('cadastrarProduto', (bearer) => {
+Cypress.Commands.add('cadastrarProduto', (bearer, produto) => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
         failOnStatusCode: false,
-        body: {
-            "nome": "Teenage Dream Deluxe Edition",
-            "preco": 60,
-            "descricao": "CD",
-            "quantidade": 480
-          },
-          headers: {
-              Authorization: bearer
-            }
-    })
-})
-
-Cypress.Commands.add('naoCadastrarProduto', (bearer) => {
-    return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Teenage Dream Deluxe Edition",
-            "preco": 60,
-            "descricao": "CD",
-            "quantidade": 480
-          },
+        body: produto,
+        
           headers: {
               Authorization: bearer
             }
