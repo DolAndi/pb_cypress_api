@@ -22,7 +22,7 @@ Cypress.Commands.add("logar", (usuario) => {
   return cy.request({
     method: "POST",
     url: `${Cypress.env("base_url")}/login`,
-    failOnStatusCode: true,
+    failOnStatusCode: false,
     body: usuario,
   });
 });
@@ -31,36 +31,31 @@ Cypress.Commands.add("cadastrarCarrinho", (bearer, produto) => {
   return cy.request({
     method: "POST",
     url: `${Cypress.env("base_url")}/carrinho`,
-    failOnStatusCode: true,
+    failOnStatusCode: false,
     body: produto,
     headers: {
-      Authorization: bearer.replace("bearer", ""),
+      Authorization: bearer,
     },
   });
 });
 
-Cypress.Commands.add("cadastrarProduto", (bearer) => {
+Cypress.Commands.add("cadastrarProduto", (bearer, produto) => {
   return cy.request({
     method: "POST",
     url: `${Cypress.env("base_url")}/produtos`,
-    failOnStatusCode: true,
+    failOnStatusCode: false,
     body: produto,
     headers: {
-      Authorization: bearer.replace("bearer", ""),
+      Authorization: bearer,
     },
   });
 });
 
-Cypress.Commands.add("cadastrarUsuario", () => {
+Cypress.Commands.add("cadastrarUsuario", (usuario) => {
   return cy.request({
     method: "POST",
     url: `${Cypress.env("base_url")}/usuarios`,
-    failOnStatusCode: true,
-    body: {
-      nome: "helen deuner",
-      email: "deunerhelen@qa.com.br",
-      password: "compasso",
-      administrador: "true",
-    },
+    failOnStatusCode: false,
+    body: usuario
   });
 });
