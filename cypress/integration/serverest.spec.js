@@ -16,6 +16,7 @@ describe('Testes na api serverest', () => {
         cy.get('@usuarioParaLogin').then( user => {
             cy.logar(user).then( res => {
                 expect(res.status).to.equal(200)
+                expect(res.body).has.property('message').to.be.equal('Login realizado com sucesso')
                 expect(res.body).to.have.property('authorization')
                 bearer = res.body.authorization
             })
@@ -54,7 +55,8 @@ describe('Testes na api serverest', () => {
     it('Deve cadastrar produto com sucesso e verificar suas propriedades ', () =>{
         cy.cadastrarProduto(bearer).then(res => {
             expect(res.status).to.be.equal(201);
-            expect(res.body).has.property('message').equal('Cadastro realizado com sucesso')
+            expect(res.body).has.property('message')
+            expect(res.body.message).to.be.equal('Cadastro realizado com sucesso')
             expect(res.body).to.have.property('_id')
         })
     })
@@ -62,7 +64,8 @@ describe('Testes na api serverest', () => {
     it('cadastrar produto com nome já existente no sistema, e verificar suas propriedades', () =>{
         cy.produtoEmUso(bearer).then(res => {
             expect(res.status).to.be.equal(400);
-            expect(res.body).has.property('message').equal('Já existe produto com esse nome')
+            expect(res.body).has.property('message')
+            expect(res.body.message).to.be.equal('Já existe produto com esse nome')
         })
     })
     

@@ -96,10 +96,10 @@ Cypress.Commands.add('produtoEmUso', (bearer) =>{
         url: `${Cypress.env('base_url')}/produtos`,
         failOnStatusCode: false,
         body: {
-            "nome": "Logite3ch MX Vertical",
-            "preco": 470,
-            "descricao": "Mouse",
-            "quantidade": 381
+            "nome": "Lápiz azul",
+            "preco": 400,
+            "descricao": "Lapis",
+            "quantidade": 400
           },
           headers: {Authorization: bearer}
 
