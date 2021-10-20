@@ -63,21 +63,143 @@ Cypress.Commands.add('logarErrado', usuario => {
         method: 'POST',
         url: `${Cypress.env('base_url')}/login`,
         failOnStatusCode: false,
+        body: usuario
     }).then( res => {
-        expect(res.body).to.have.property('message')
-        //expect(res.body.usuarios).to.be.a('number')
+        expect(res.body).to.have.property('email')
         })
 })
 
 
-Cypress.Commands.add('cadastrarCarrinho', (bearer, produto) => {
+// Cypress.Commands.add('cadastrarCarrinho', (bearer, produto) => {
+//     return cy.request({
+//         method: 'POST',
+//         url: `${Cypress.env('base_url')}/carrinho`,
+//         failOnStatusCode: true,
+//         body: produto,
+//         headers: {
+//             Authorization: bearer.replace('bearer', '')
+//         }
+//     })
+// })
+
+
+Cypress.Commands.add('cadastrarUsuario', usuario => {
     return cy.request({
         method: 'POST',
-        url: `${Cypress.env('base_url')}/carrinho`,
-        failOnStatusCode: true,
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: usuario
+        }).then( res => {
+            //console.log(res.body)
+            expect(res.body).to.have.property('message')
+            expect(res.body.message).to.be.equal('Cadastro realizado com sucesso')
+            expect(res.body).to.have.property('_id')
+        })
+})
+
+
+
+Cypress.Commands.add('cadastrarUsuarioJaExistente', usuario => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: usuario
+        }).then( res => {
+            //console.log(res.body)
+            expect(res.body).to.have.property('message')
+            expect(res.body.message).to.be.equal('Este email já está sendo usado')
+        })
+})
+
+
+Cypress.Commands.add('cadastrarUsuarioInvalido', usuario => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: usuario
+        }).then( res => {
+            //console.log(res.body)
+            expect(res.body).to.have.all.keys('nome', 'email', 'administrador' )
+            expect(res.body.nome).to.be.equal('nome deve ser uma string')
+            expect(res.body.email).to.be.equal('email deve ser um email válido')
+            expect(res.body.administrador).to.be.equal("administrador deve ser 'true' ou 'false'")
+        })
+})
+
+
+
+Cypress.Commands.add('cadastrarProduto', (bearer, produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
         body: produto,
-        headers: {
-            Authorization: bearer.replace('bearer', '')
-        }
+        headers: 
+        {Authorization: bearer}
+       
+    }).then( res => {
+        //console.log(res.body)
+        //console.log(produto)
+        expect(res.body).to.have.all.keys('message', '_id')
+        expect(res.body.message).to.be.equal('Cadastro realizado com sucesso')
+        expect(res.body._id).to.have.lengthOf(16)
+    })
+})
+
+
+Cypress.Commands.add('cadastrarProdutoJaExistente', (bearer, produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: produto,
+        headers: 
+        {Authorization: bearer}
+       
+    }).then( res => {
+        //console.log(res.body)
+        //console.log(produto)
+        expect(res.body).to.have.property('message')
+        expect(res.body.message).to.be.equal('Já existe produto com esse nome')
+    })
+})
+
+
+Cypress.Commands.add('cadastrarProdutoTokenInvalido', (bearer, produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: produto,
+        headers: 
+        {Authorization: bearer}
+       
+    }).then( res => {
+        //console.log(res.body)
+        //console.log(produto)
+        expect(res.body).to.have.property('message')
+        expect(res.body.message).to.be.equal('Token de acesso ausente, inválido, expirado ou usuário do token não existe mais')
+    })
+})
+
+
+Cypress.Commands.add('cadastrarCaracteresInvalidos', (bearer, produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: produto,
+        headers: 
+        {Authorization: bearer}
+       
+    }).then( res => {
+        //console.log(res.body)
+        //console.log(produto)
+        expect(res.body).to.have.property('preco')
+        expect(res.body).to.have.property('quantidade')
+        expect(res.body.preco).to.be.equal('preco deve ser um número')
+        expect(res.body.quantidade).to.be.equal('quantidade deve ser um número')
     })
 })
