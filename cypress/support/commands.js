@@ -1,12 +1,4 @@
 /// <reference types="cypress" />
-// -- This is a parent command --
-//Cypress.Commands.add('login', (email, password) => { });
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-// -- This is a dual command --
-//Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('buscarUsuarioAdmin', () => { 
     cy.request({
@@ -20,7 +12,7 @@ Cypress.Commands.add('buscarUsuarioAdmin', () => {
         expect(res.body.usuarios).to.be.a("array")
 
         for(var i = 0; i < res.body.usuarios.length; i++) {
-            if(res.body.usuarios[i].administrador == "true"){
+            if(res.body.usuarios[i].administrador == "false"){
                 return res.body.usuarios[i]
             }
         }
@@ -30,19 +22,16 @@ Cypress.Commands.add("logar", usuario => {
     return cy.request({
         method: "POST",
         url: `${Cypress.env("base_url")}/login`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: usuario
     })
 })
 Cypress.Commands.add("logarErro", () => {
     return cy.request({
-        method: 'POST',
+        method: "POST",
         url: `${Cypress.env('base_url')}/login`,
         failOnStatusCode: false,
-        body: {
-            "email": "serginhomalandro@qa.com",
-            "password": "teste"
-          }
+        body: usuario
     })
 })
 Cypress.Commands.add("cadastrarUsuario", () =>{
@@ -76,12 +65,7 @@ Cypress.Commands.add("cadastrarProduto", (bearer) =>{
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
         failOnStatusCode: false,
-        body: {
-            "nome": "caneta muito maluquinha",
-            "preco": 23,
-            "descricao": "canetovski",
-            "quantidade": 13
-          },
+        body: produto,
           headers: {Authorization: bearer}
     })
 })
@@ -90,13 +74,7 @@ Cypress.Commands.add("cadastrarProdutoErro", (bearer) =>{
         method: "POST",
         url: `${Cypress.env('base_url')}/produtos`,
         failOnStatusCode: false,
-        body: {
-            "nome": "Razer Fone",
-            "preco": 299,
-            "descricao": "fone de ouvido",
-            "quantidade": 12
-          },
+        body: produto,
           headers: {Authorization: bearer}
-
     })
 })
