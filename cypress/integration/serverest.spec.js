@@ -3,8 +3,8 @@ import Factory from "../dynamics/factory"
 var bearer 
 describe('Teste dna api serverest', () => {
 
-     it('deve verificar login valido e invalidos ', () => {
-         
+     it('deve verificar login valido e varios logins invalidos ', () => {
+
        cy.fixture('loginCredentials').then(user => {
 
            cy.logar(user.valido).then(res => {
@@ -31,6 +31,11 @@ describe('Teste dna api serverest', () => {
                cy.logar(user.semCampoSenha).then(res =>{
                 expect(res.status).to.be.equal(400);
                 expect(res.body).has.property('password').to.be.equal('password é obrigatório')
+               })
+               cy.logar(user.semCampos).then(res =>{
+                expect(res.status).to.be.equal(400);
+                expect(res.body).has.property('password').to.be.equal('password é obrigatório')
+                expect(res.body).has.property('email').to.be.equal('email é obrigatório')
                })
 
            })
