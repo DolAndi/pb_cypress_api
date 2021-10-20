@@ -21,18 +21,6 @@ Cypress.Commands.add('buscarUsuarioAdmin', () => {
     })
 })
 
-Cypress.Commands.add('loginInvalido', () => {
-    return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/login`,
-        failOnStatusCode: false,
-        body:{
-            "email": "aleatorio@qa.com",
-            "password": "aleatorio"
-        }
-    })
-})
-
 Cypress.Commands.add('logar', usuario => {
     return cy.request({
         method: 'POST',
@@ -42,48 +30,7 @@ Cypress.Commands.add('logar', usuario => {
     })
 })
 
-Cypress.Commands.add('cadastrarProduto', (bearer) => {
-    return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false,
-        body:{
-            "nome": "batata colorida versão 2.0",
-            "preco": 480,
-            "descricao": "tipo unicorn",
-            "quantidade": 7
-        },
-        headers:{
-            Authorization : bearer
-        }
-    })
-})
-
-Cypress.Commands.add('cadastrarUsuario', () => {
-    return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/usuarios`,
-        failOnStatusCode: false,
-        body:{
-            "nome": "Outro ninguém",
-            "email": "ninguem.outro@qa.com.br",
-            "password": "ninguemoutro",
-            "administrador": "true"
-        }
-    })
-})
-Cypress.Commands.add('buscarProduto', () => { 
-    cy.request({ 
-        method: 'GET',
-        url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false // 4xx ele não irá parar a automação
-    }).then( res => { 
-        for(var i = 0; i < res.body.produtos.length; i++) {
-            return res.body.produtos[i]
-        }
-    })
-})
-Cypress.Commands.add('cadastrarProdutoExistente', (bearer, produto) => {
+Cypress.Commands.add('cadastrarProduto', (bearer, produto) => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
@@ -94,4 +41,40 @@ Cypress.Commands.add('cadastrarProdutoExistente', (bearer, produto) => {
         }
     })
 })
+
+Cypress.Commands.add('cadastrarUsuario', (user) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: user
+    })
+})
+
+Cypress.Commands.add('buscarProduto', () => { 
+    cy.request({ 
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false // 4xx ele não irá parar a automação
+    }).then( res => { 
+        for(var i = 0; i < res.body.produtos.length; i++) {
+            return res.body.produtos[i]
+        }
+    })
+Cypress.Commands.add('buscarUsuario', () => { 
+    cy.request({ 
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false // 4xx ele não irá parar a automação
+    }).then( res => { 
+        for(var i = 0; i < res.body.usuarios.length; i++) {
+            return res.body.usuarios[i]
+        }
+    })
+})
+
+
+})
+
+
     

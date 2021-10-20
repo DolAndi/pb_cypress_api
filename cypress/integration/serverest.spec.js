@@ -1,10 +1,11 @@
 /// <reference types="cypress" />
 
+import Factory from '../dynamics/factory'
+
 let bearer = ""
 
-
 describe('testes de api serverest', () => {
-    it('Deve trazer um usuário administrador para login', () => { 
+    it('Deve realizar o login', () => { 
         cy.buscarUsuarioAdmin().then( usuario => { 
             cy.wrap({email: usuario.email, password: usuario.password}).as("usuarioParaLogin")
             //{email: "fulano@qa.com", "password": "teste"}   
@@ -15,41 +16,49 @@ describe('testes de api serverest', () => {
                 expect(res.status).to.be.equal(200)
                 expect(res.body).to.have.property("authorization")
                 bearer = res.body.authorization
-         })
+             })
+        })
     })
-})
 
-    it('Não deve realizar o login caso o email ou senha sejam inválidos', () => { 
-        cy.loginInvalido().then( res => {
-            expect(res.status).to.be.equal(401) // na documentação diz que deveria ser 400...
-            expect(res.body).to.not.have.property("authorization")
-            expect(res.body.message).to.be.equal("Email e/ou senha inválidos")
+    it('Não deve realizar o login caso o email ou senha estejam em branco', () => { 
+        cy.fixture('example.json').then(usuario => {
+            cy.logar(usuario.emBranco).then( res => {
+                expect(res.status).to.be.equal(400)
+                expect(res.body).to.not.have.property("authorization")
+                expect(res.body).to.not.have.property("message")
+            })
         })
     })
 
     it('Deve cadastrar um novo produto', () => {
-        cy.cadastrarProduto(bearer).then( res => {
+
+        let produto = Factory.gerarProduto()
+
+        cy.cadastrarProduto(bearer, produto).then( res => {
             expect(res.status).to.be.equal(201)
             expect(res.body).to.have.property("message")
             expect(res.body).to.have.property("_id")         
         })
     })
 
-    it('Não deve cadastrar um produto com o mesmo nome', () => {
+    it('Não deve cadastrar um produto já existente', () => {
         cy.buscarProduto().then( product => { 
             cy.wrap({nome: product.nome, preco: product.preco, descricao: product.descricao, quantidade: product.quantidade}).as("produtoExistente")  
         })
         cy.get('@produtoExistente').then(produto => {
-            cy.cadastrarProdutoExistente(bearer, produto).then( res => {
+            cy.cadastrarProduto(bearer, produto).then( res => {
                 expect(res.status).to.be.equal(400)
                 expect(res.body).to.not.have.property("_id")
                 expect(res.body.message).to.be.equal("Já existe produto com esse nome")         
+            })
         })
     })
-})
 
     it('Deve cadastrar um novo usuario', () => {
-        cy.cadastrarUsuario().then( res => {
+
+        let user = Factory.gerarUsuario()
+
+        cy.cadastrarUsuario(user).then( res => {
             expect(res.status).to.be.equal(201)
             expect(res.body).to.have.property("message")
             expect(res.body).to.have.property("_id")
@@ -58,12 +67,16 @@ describe('testes de api serverest', () => {
     })
 
     it('Não deve cadastrar um usuario ja existente', () => {
-        cy.cadastrarUsuario().then( res => {
-            expect(res.status).to.be.equal(400)
-            expect(res.body).to.not.have.property("_id")
-            expect(res.body.message).to.be.equal("Este email já está sendo usado")         
+        cy.buscarUsuario().then( usuario => { 
+            cy.wrap({nome: usuario.nome, email: usuario.email, password: usuario.password, administrador: usuario.administrador}).as("usuarioExistente")  
+        })
+
+        cy.get('@usuarioExistente').then(user => {
+            cy.cadastrarUsuario(user).then( res => {
+                expect(res.status).to.be.equal(400)
+                expect(res.body).to.not.have.property("_id")
+                expect(res.body.message).to.be.equal("Este email já está sendo usado")         
+            })
         })
     })
 })
-
-
