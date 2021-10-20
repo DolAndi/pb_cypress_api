@@ -23,7 +23,7 @@ Cypress.Commands.add('logar', usuario => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/login`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: usuario
     })
 })
@@ -48,5 +48,25 @@ Cypress.Commands.add('cadastrarCarrinho', (bearer,produto) => {
         headers: {
             Authorization: bearer.replace('bearer', '')
         }
+    })
+})
+Cypress.Commands.add('cadastrarProduto', (bearer,produto) => {
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false,
+        body: produto,
+        headers: {
+            Authorization: bearer
+        }
+    })
+})
+
+Cypress.Commands.add('cadastrarUsuario', (usuario)=>{
+    return cy.request({
+        method: 'POST',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body : usuario
     })
 })
