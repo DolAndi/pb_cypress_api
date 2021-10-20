@@ -61,8 +61,8 @@ describe('Teste dna api serverest', () => {
     it('cadastrar produto corretamente deve possuir status 201 e propriedade message e _id e cadastrar produto com nome igual e retornar status 400 e se posui a propriedade message ', () =>{
         
         
-        let produto = Factory.gerarProdutoBody()
-        let produtoExistente = Factory.produtoExistente()
+        let produto = Factory.gerarProdutoBody(); let produtoExistente = Factory.produtoExistente();let produtoNomeVazio = Factory.produtoNomeVazio()
+        let produtoDescricaoVazio = Factory.produtoDescricaoVazio(); let produtoSemNome = Factory.produtoSemNome()
 
         cy.cadastrarProduto(bearer, produto).then(res => {
             expect(res.status).to.be.equal(201);
@@ -73,6 +73,18 @@ describe('Teste dna api serverest', () => {
         cy.cadastrarProduto(bearer, produtoExistente).then(res =>{
             expect(res.status).to.be.equal(400);
             expect(res.body).has.property('message').equal('Já existe produto com esse nome')
+        })
+        cy.cadastrarProduto(bearer, produtoNomeVazio).then(res =>{
+            expect(res.status).to.be.equal(400);
+            expect(res.body).has.property('nome').equal('nome não pode ficar em branco')
+        })
+        cy.cadastrarProduto(bearer, produtoDescricaoVazio).then(res =>{
+            expect(res.status).to.be.equal(400);
+            expect(res.body).has.property('descricao').equal('descricao não pode ficar em branco')
+        })
+        cy.cadastrarProduto(bearer, produtoSemNome).then(res =>{
+            expect(res.status).to.be.equal(400);
+            expect(res.body).has.property('nome').equal('nome é obrigatório')
         })
     })
 })

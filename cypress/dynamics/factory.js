@@ -20,6 +20,29 @@ export default class Factory {
             "quantidade": 381
           }
     }
+    static produtoNomeVazio(){
+        return  {
+            "nome": "",
+            "preco": 470,
+            "descricao": "Mouse",
+            "quantidade": 381
+          }
+    }
+    static produtoDescricaoVazio(){
+        return  {
+            "nome": "Logitech MX Vertical",
+            "preco": 470,
+            "descricao": "",
+            "quantidade": 381
+          }
+    }
+    static produtoSemNome(){
+        return  {
+            "preco": 470,
+            "descricao": "asdasd",
+            "quantidade": 381
+          }
+    }
     static gerarUsuariosValido(){
         return {
             "nome": "Fulano da Silva",
