@@ -1,6 +1,5 @@
 # pb_cypress_api
 
-=================================
 !!Fazer exemplos de CERTO e FALHA em:
 
 |!POST login     "STATUS: done"  |
@@ -9,7 +8,7 @@
 |!POST produtos  "STATUS: done"  |
 
 |!POST carrinho  "STATUS: future"|
-=================================
+
 
 ▒▒▒▒▒▒▒▒▒▄▄▄▄▒▒▒▒▒▒▒
 ▒▒▒▒▒▒▄▀▀▓▓▓▀█▒▒▒▒▒▒
