@@ -14,14 +14,21 @@ describe('Testes na api serverest', () => {
                 expect(res.status).to.equal(200)
                 expect(res.body).to.have.property('authorization')
                 bearer = res.body.authorization
+                cy.validarContrato(res, 'post_login', 200).then( validacao=>{
+                    expect(validacao).to.be.equal('Contrato validado!')
+                })
+
            })
         })
-       // })
     })
     it('Deve dar status code(400)"Email e senha inválidos"', ()=>{
         cy.logarErrado().then(res=>{
             expect(res.status).to.equal(400)
+            cy.validarContrato(res, 'post_login', 400).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
         })
+        
 
     })
     it('Deve dar status code(400)"Email em Branco"', ()=>{
@@ -29,6 +36,9 @@ describe('Testes na api serverest', () => {
             cy.logar(user.emailEmBranco).then(res=>{
                 expect(res.status).to.equal(400)
                 expect(res.body).property('email').to.equal('email não pode ficar em branco')
+                cy.validarContrato(res, 'post_login', 400).then( validacao=>{
+                    expect(validacao).to.be.equal('Contrato validado!')
+                })
             })
         })
 
@@ -39,13 +49,20 @@ describe('Testes na api serverest', () => {
         cy.cadastrarUsuario(usuario).then(res=>{
             expect(res.status).to.equal(201)
             expect(res.body).to.have.property('message', 'Cadastro realizado com sucesso')
+            cy.validarContrato(res, 'post_usuario', 201).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
         })
+        
     })
 
     it('Deve tentar Cadastrar um usuário ja cadastrado (400)"', ()=>{
         cy.fixture('loginCredentials').then((user)=>{
             cy.cadastrarUsuario(user.usuarioJaCadastrado).then(res=>{
                 expect(res.status).to.equal(400)
+                cy.validarContrato(res, 'post_usuario', 400).then( validacao=>{
+                    expect(validacao).to.be.equal('Contrato validado!')
+                })
             })
 
         })
@@ -57,6 +74,9 @@ describe('Testes na api serverest', () => {
         cy.cadastrarProduto(bearer,produto).then(res=>{
             expect(res.status).to.be.equal(201)
             expect(res.body).to.have.all.keys('message', '_id')
+            cy.validarContrato(res, 'post_produto', 201).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
         })
     })
     it('Deve tentar Cadastrar um produto ja cadastrado (400)"', ()=>{
@@ -65,14 +85,21 @@ describe('Testes na api serverest', () => {
             cy.cadastrarProduto(bearer,produto).then(res=>{
                 expect(res.status).to.be.equal(400)
                 expect(res.body).to.have.property('message')
+                cy.validarContrato(res, 'post_produto', 401).then( validacao=>{
+                    expect(validacao).to.be.equal('Contrato validado!')
+                })
 
             })
 
         })
     })
+    it('Deve realizar teste de contrato sobre a requisição GET na rota /produto', ()=>{
+        cy.buscarProdutos().then(res =>{
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, 'get_produtos', 200).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
 })
 
-// Um cenário positivo e um negativo para os verbos e rotas: 
-// POST: /login => o caso negativo
-// POST: /usuarios e o caso negativo
-// POST: /produtos e o caso negativo
