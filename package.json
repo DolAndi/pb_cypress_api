@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/compassoLeonardo/pb_cypress_api/issues"
   },
-  "homepage": "https://github.com/compassoLeonardo/pb_cypress_api#readme"
+  "homepage": "https://github.com/compassoLeonardo/pb_cypress_api#readme",
+  "devDependencies": {
+    "faker": "^5.5.3"
+  }
 }
