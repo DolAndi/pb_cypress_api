@@ -4,8 +4,8 @@ export default class Factory {
     static gerarProdutoBody() {
 
         return {
-            "nome": `Giz ${faker.commerce.color()}`,
-            "preco": 470,
+            "nome": `${faker.commerce.productAdjective()} ${faker.commerce.color()}`,
+            "preco": faker.commerce.price(),
             "descricao": "Rosa Giz",
             "quantidade": 100            
         }

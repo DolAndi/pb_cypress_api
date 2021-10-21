@@ -49,7 +49,7 @@ describe('Testes na api serverest', () => {
 
         let produto = Factory.gerarProdutoBody()
 
-        cy.cadastrarProduto(bearer, produto).then( res => {
+        cy.cadastarProduto(bearer, produto).then( res => {
             expect(res.status).to.equal(201)
             expect(res.body).to.have.all.keys('message', '_id')
         })
