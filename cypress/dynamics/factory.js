@@ -6,7 +6,7 @@ export default class Factory {
     static gerarProdutoBody(){
         
         return  {
-            "nome": `${faker.commerce.product} da cor ${faker.commerce.color()} e tambem possui ${faker.commerce.productAdjective}`,
+            "nome": `${faker.commerce.product} da linda cor ${faker.commerce.color()} e tambem possui ${faker.commerce.productAdjective}`,
             "preco": 470,
             "descricao": "Mouse",
             "quantidade": 381
@@ -51,6 +51,15 @@ export default class Factory {
             "administrador": "true"
           }
     }
+    static gerarUsuariosValidoNoAdm(){
+        return {
+            "nome": "Fulango da Silva",
+            "email": `gabriel@qa.com.br`, 
+            "password": "teste",
+            "administrador": "false"
+          }
+    }
+
     static gerarUsuariosInvalido(){
         return {
             "nome": "Fulano da Silva",
