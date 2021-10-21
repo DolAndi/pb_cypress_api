@@ -184,4 +184,15 @@ it("Não deve realizar login - sem email e sem senha", () => {
       expect(res.body).to.not.have.property("_id");
     });
   });
+
+  it("Deve realizar teste de contrato na rota get/produtos", () => {
+    cy.buscarProdutos().then(res => {
+      expect(res.status).to.be.equal(200)
+      cy.validarContrato(res, "get_produtos", 200).then(validacao => {
+        expect(validacao).to.be.equal('Contrato validado!')
+      })
+
+    })
+  })
+
 });
