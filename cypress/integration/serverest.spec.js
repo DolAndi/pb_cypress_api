@@ -52,10 +52,22 @@ describe('Teste serverest', () => {
         })
     })
 
-    it.only('Deve realizar teste de contrato sobre a requisição get na rota produtos', () => {
+    it('Deve realizar teste de contrato sobre a requisição get na rota produtos', () => {
         cy.buscarProdutos().then( res => {
             expect(res.status).to.be.equal(200)
             cy.validarContrato(res, "get_produtos", 200). then( validacao => {
+                expect(validacao).to.be.equal('Contrato Validado!')
+            })
+            //res= resposta, nome da pasta schema, nome do arquivo json
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição post na rota produtos', () => {
+        let produto = Factory.gerarProdutoBody()
+        
+        cy.cadastrarProduto(bearer, produto).then( res => {
+            expect(res.status).to.be.equal(201)
+            cy.validarContrato(res, "post_produtos", 201). then( validacao => {
                 expect(validacao).to.be.equal('Contrato Validado!')
             })
             //res= resposta, nome da pasta schema, nome do arquivo json
