@@ -7,7 +7,7 @@
 |!GET  usuarios  "STATUS: done"  |
 |!POST usuarios  "STATUS: work"  |
 |!POST produtos  "STATUS: done"  |
-=================================
+
 |!POST carrinho  "STATUS: future"|
 =================================
 
