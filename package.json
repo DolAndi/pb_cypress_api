@@ -5,11 +5,12 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "cypress": "^8.6.0"
+    "cypress": "^8.6.0",
+    "faker": "^5.5.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cy:open": "cypress open",
+    "cy:open": "cypress open --config watchForFileChanges=false",
     "cy:run": "cypress run"
   },
   "repository": {
