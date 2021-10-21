@@ -21,5 +21,8 @@
   "homepage": "https://github.com/compassoLeonardo/pb_cypress_api#readme",
   "devDependencies": {
     "cypress": "^8.6.0"
+  },
+  "dependencies": {
+    "faker": "^5.5.3"
   }
 }
