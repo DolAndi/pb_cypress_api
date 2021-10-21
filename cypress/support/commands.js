@@ -1,4 +1,22 @@
 ///<reference types="cypress" />
+import Ajv from 'ajv'
+const ajv = new Ajv({allErrors: true, verbose: true, strict: false})
+
+Cypress.Commands.add('validarContrato', (res, schema, status) => {
+    cy.fixture(`schema/${schema}/${status}.json`).then(schema => {
+        const validate = ajv.compile(schema)
+        const valid = validate(res.body)
+        if(!valid){
+            var errors = ''
+            for(let each in validate.errors){
+                let err = validate.errors[each]
+                errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`
+            }
+            throw new Error('Contrato inválido, por favor verifique!' + errors)
+        }
+        return 'Contrato válidado!'
+    })
+})
 
 Cypress.Commands.add('buscarUsuarioAdmin', () => { 
     cy.request({ 
@@ -61,6 +79,7 @@ Cypress.Commands.add('buscarProduto', () => {
             return res.body.produtos[i]
         }
     })
+    
 Cypress.Commands.add('buscarUsuario', () => { 
     cy.request({ 
         method: 'GET',
@@ -70,6 +89,22 @@ Cypress.Commands.add('buscarUsuario', () => {
         for(var i = 0; i < res.body.usuarios.length; i++) {
             return res.body.usuarios[i]
         }
+    })
+})
+
+Cypress.Commands.add('buscarProdutos', () => { 
+    cy.request({ 
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false // 4xx ele não irá parar a automação
+    })
+})
+
+Cypress.Commands.add('buscarUsuarios', () => { 
+    cy.request({ 
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false // 4xx ele não irá parar a automação
     })
 })
 

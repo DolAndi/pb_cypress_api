@@ -79,4 +79,98 @@ describe('testes de api serverest', () => {
             })
         })
     })
+
+    it('Deve realizar teste de contrato sobre a requisição GET na rota /produtos', () => {
+        cy.buscarProdutos().then(res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, "get_produtos", 200).then(res => {
+                expect(res).to.be.equal("Contrato válidado!")
+            })
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição GET na rota /usuarios', () => {
+        cy.buscarUsuarios().then(res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, "get_usuarios", 200).then(res => {
+                expect(res).to.be.equal("Contrato válidado!")
+            })
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /login', () => {
+        cy.buscarUsuarioAdmin().then( usuario => { 
+            cy.wrap({email: usuario.email, password: usuario.password}).as("usuarioParaLogin")   
+    
+        cy.get('@usuarioParaLogin').then(user => {
+            cy.logar(user).then(res => {
+                expect(res.status).to.be.equal(200)
+                cy.validarContrato(res, "post_login", 200).then(res => {
+                    expect(res).to.be.equal("Contrato válidado!")
+                })
+            })
+        })
+    })
+})
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /login para usuário inválido', () => { 
+        cy.fixture('example.json').then(usuario => {
+            cy.logar(usuario.senhaInvalida).then(res => {
+                expect(res.status).to.be.equal(401) // deveria ser 400 pois não consta 401 na documentação
+                cy.validarContrato(res, "post_login", 400).then(res => {
+                    expect(res).to.be.equal("Contrato válidado!")
+                })
+            })
+        })
+    })
+
+    it('Deve realizar um teste de contrato sobre a requisição POST na rota /produtos', () => {
+
+        let produto = Factory.gerarProduto()
+
+        cy.cadastrarProduto(bearer, produto).then( res => {
+            console.log(res)
+            cy.validarContrato(res, "post_produtos", 201).then(res => {
+                expect(res).to.be.equal("Contrato válidado!")
+                     
+            })
+        })
+    })
+
+    it('Deve realizar um teste de contrato sobre a requisição POST na rota /produtos para produto já existente', () => {
+        cy.buscarProduto().then( product => { 
+            cy.wrap({nome: product.nome, preco: product.preco, descricao: product.descricao, quantidade: product.quantidade}).as("produtoExistente")  
+        })
+        cy.get('@produtoExistente').then(produto => {
+            cy.cadastrarProduto(bearer, produto).then( res => {
+                console.log(res)
+                cy.validarContrato(res, "post_produtos", 400).then(res => {
+                    expect(res).to.be.equal("Contrato válidado!")
+                })      
+            })
+        })
+    })
+
+    it('Deve realizar um teste de contrato sobre a requisição POST na rota /usuarios', () => {
+
+        let user = Factory.gerarUsuario()
+
+        cy.cadastrarUsuario(user).then( res => {
+            cy.validarContrato(res, "post_usuarios", 201).then(res => {
+                expect(res).to.be.equal("Contrato válidado!")
+                      
+            })         
+        })
+    })
+    it('Deve realizar um teste de contrato sobre a requisição POST na rota /usuarios para usuário já existente', () => {
+        cy.buscarProduto().then( product => { 
+            cy.wrap({nome: product.nome, preco: product.preco, descricao: product.descricao, quantidade: product.quantidade}).as("produtoExistente")  
+        })
+        cy.get('@produtoExistente').then(produto => {
+            cy.cadastrarProduto(bearer, produto).then( res => {
+                cy.validarContrato(res, "post_usuarios", 400).then(res => {
+                    expect(res).to.be.equal("Contrato válidado!")
+                })         
+            })
+        })
+    })
 })
