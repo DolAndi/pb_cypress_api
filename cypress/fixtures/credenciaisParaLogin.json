@@ -1,0 +1,16 @@
+{ 
+  "emailComSenhaValidos": {
+    "email": "fulano@qa.com",
+    "password": "teste"
+  },
+
+  "emailInvalido": {
+    "email": "fulanoqa.com",
+    "password": "teste"
+  },
+
+  "senhaInvalida": {
+    "email": "fulano@qa.com",
+    "password": "12548"
+  }
+}
