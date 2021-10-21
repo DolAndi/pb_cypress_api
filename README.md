@@ -2,7 +2,7 @@
 
 =================================
 !!Fazer exemplos de CERTO e FALHA em:
-=================================
+
 |!POST login     "STATUS: done"  |
 |!GET  usuarios  "STATUS: done"  |
 |!POST usuarios  "STATUS: work"  |
