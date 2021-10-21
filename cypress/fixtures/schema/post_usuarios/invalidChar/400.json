@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "required": [
+        "nome",
+        "email",
+        "administrador"
+    ],
+    "properties": {
+        "nome": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "administrador": {
+            "type": "string"
+        }
+    },
+    "additionalProperties": true
+}

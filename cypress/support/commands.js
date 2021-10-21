@@ -1,5 +1,53 @@
 
 /// <reference types="cypress" />
+import Ajv from 'ajv'
+const ajv = new Ajv({allErrors: true, verbose: true, strict: false})
+
+Cypress.Commands.add('validarContrato', (res, schema, status) => {
+    cy.fixture(`schema/${schema}/${status}.json`).then(schema => {
+        const validate = ajv.compile(schema)
+        const valid = validate(res.body)
+        
+        if(!valid) {
+            var errors = ''
+            for (let each in validate.errors){
+                let err = validate.errors[each]
+                errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`
+            }
+            throw new Error('Contrato inválido, por favor verifique' + errors)
+            
+        }
+        return 'Contrato validado'
+    })
+})
+
+Cypress.Commands.add('buscarProdutos', () => {
+    cy.request({
+        method: 'GET', 
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false
+    })
+})
+
+
+Cypress.Commands.add('cadastrarUsuarioContrato', usuario => {
+    cy.request({
+        method: 'POST', 
+        url: `${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false,
+        body: usuario
+    })
+})
+
+
+// Cypress.Commands.add('loginContrato', usuario => {
+//     return cy.request({
+//         method: 'POST',
+//         url: `${Cypress.env('base_url')}/login`,
+//         failOnStatusCode: false,
+//         body: usuario
+//     })
+// })
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -105,10 +153,6 @@ Cypress.Commands.add('cadastrarUsuarioJaExistente', usuario => {
         url: `${Cypress.env('base_url')}/usuarios`,
         failOnStatusCode: false,
         body: usuario
-        }).then( res => {
-            //console.log(res.body)
-            expect(res.body).to.have.property('message')
-            expect(res.body.message).to.be.equal('Este email já está sendo usado')
         })
 })
 
@@ -119,12 +163,6 @@ Cypress.Commands.add('cadastrarUsuarioInvalido', usuario => {
         url: `${Cypress.env('base_url')}/usuarios`,
         failOnStatusCode: false,
         body: usuario
-        }).then( res => {
-            //console.log(res.body)
-            expect(res.body).to.have.all.keys('nome', 'email', 'administrador' )
-            expect(res.body.nome).to.be.equal('nome deve ser uma string')
-            expect(res.body.email).to.be.equal('email deve ser um email válido')
-            expect(res.body.administrador).to.be.equal("administrador deve ser 'true' ou 'false'")
         })
 })
 
@@ -158,11 +196,6 @@ Cypress.Commands.add('cadastrarProdutoJaExistente', (bearer, produto) => {
         headers: 
         {Authorization: bearer}
        
-    }).then( res => {
-        //console.log(res.body)
-        //console.log(produto)
-        expect(res.body).to.have.property('message')
-        expect(res.body.message).to.be.equal('Já existe produto com esse nome')
     })
 })
 
@@ -194,12 +227,6 @@ Cypress.Commands.add('cadastrarCaracteresInvalidos', (bearer, produto) => {
         headers: 
         {Authorization: bearer}
        
-    }).then( res => {
-        //console.log(res.body)
-        //console.log(produto)
-        expect(res.body).to.have.property('preco')
-        expect(res.body).to.have.property('quantidade')
-        expect(res.body.preco).to.be.equal('preco deve ser um número')
-        expect(res.body.quantidade).to.be.equal('quantidade deve ser um número')
     })
 })
+
