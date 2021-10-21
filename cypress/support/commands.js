@@ -72,7 +72,7 @@ Cypress.Commands.add('cadastarProduto', (bearer, produto) => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: produto,
         headers: {
             Authorizarion: bearer
