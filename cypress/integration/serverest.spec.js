@@ -50,4 +50,12 @@ describe("Testes na API ServeRest", () => {
             expect(res.body).has.property("message").equal("Cadastro realizado com sucesso")
         })
     })
+    it("Deve realizar teste de contrato sobre a requisição GET na rota /produto", () => {
+        cy.buscarProdutos().then( res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, "get_produtos", 200).then(validacao => { //res = resposta da api, nome da pasta na schema, nome do arquivo json
+                expect(validacao).to.be.equal("Contrato validado!")
+            })
+        })
+    })
 })

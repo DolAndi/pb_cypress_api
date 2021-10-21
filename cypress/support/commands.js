@@ -1,5 +1,32 @@
 /// <reference types="cypress" />
 
+import Ajv from "ajv"
+const ajv = new Ajv({allErrors: true, verbose: true, strict: false})
+
+Cypress.Commands.add("validarContrato", (res, schema, status) => {
+    cy.fixture(`schema/${schema}/${status}.json`).then( schema => {
+        const validate = ajv.compile(schema)
+        const valid = validate(res.body)
+        if(!valid){
+            var errors = ""
+            for(let each in validate.errors){
+                let err = validate.errors[each]
+                errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}` //o que deveria ser           
+            }
+        throw new Error("Contrato inválido, por favor verifique!" + errors)
+        }
+        return "Contrato validado!"
+    })
+})
+
+Cypress.Commands.add("buscarProdutos", () => {
+    cy.request({
+        method: "GET",
+        url: `${Cypress.env("base_url")}/produtos`,
+        failOnStatusCode: false
+    })
+})
+
 Cypress.Commands.add("logar", usuario => {
     return cy.request({
         method: "POST",
@@ -8,6 +35,7 @@ Cypress.Commands.add("logar", usuario => {
         body: usuario
     })
 })
+
 Cypress.Commands.add("cadastrarUsuario", (usuario) =>{
     return cy.request({
         method: "POST",
@@ -16,6 +44,7 @@ Cypress.Commands.add("cadastrarUsuario", (usuario) =>{
         body: usuario
     })
 })
+
 Cypress.Commands.add("cadastrarProduto", (bearer) =>{
     return cy.request({
         method: "POST",
