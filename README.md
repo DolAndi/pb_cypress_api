@@ -1,12 +1,14 @@
 # pb_cypress_api
 
-//Fazer exemplos de CERTO e FALHA em:
 =================================
-!!POST login     "STATUS: done"  |
-!!POST usuarios  "STATUS: shhh"  |
-!!POST produtos  "STATUS: inp."  |
+!!Fazer exemplos de CERTO e FALHA em:
 =================================
-!!POST carrinho  "STATUS: future"|
+|!POST login     "STATUS: done"  |
+|!GET  usuarios  "STATUS: done"  |
+|!POST usuarios  "STATUS: work"  |
+|!POST produtos  "STATUS: done"  |
+=================================
+|!POST carrinho  "STATUS: future"|
 =================================
 
 ▒▒▒▒▒▒▒▒▒▄▄▄▄▒▒▒▒▒▒▒
