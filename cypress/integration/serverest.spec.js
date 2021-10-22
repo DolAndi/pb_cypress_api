@@ -5,6 +5,12 @@ import Factory from '../dynamics/factory.js'
 
 let bearer
 
+let bearerNaoAdmin
+
+let usuarioNaoAdmin
+
+let produtoExcluir
+
 
 describe('Testes na api serverest', () => {
     // it('Deve trazer um usuário admin para login', () => {
@@ -33,6 +39,9 @@ describe('Testes na api serverest', () => {
             })
         })
     })
+
+
+    
 
     
     //////////////login negativo
@@ -109,6 +118,43 @@ describe('Testes na api serverest', () => {
             
         })
 
+
+
+        it('Deve cadastrar um usuário não admin com sucesso e retornar o status code 201', () => {
+            //let usuario = Factory.gerarUsuarioBody();
+            cy.wrap(Factory.UsuarioNaoAdmin()).as('usuarioNaoAdmin')
+
+            cy.get('@usuarioNaoAdmin').then( usuario => {
+                cy.cadastrarUsuarioContrato(usuario).then( res => {
+                    //console.log(usuario)
+                    expect(res.status).to.be.equal(201)
+                    cy.validarContrato(res, "post_usuarios", 201).then(validacao => {  
+                        expect(validacao).to.be.equal('Contrato validado')
+                        usuarioNaoAdmin = {email: usuario.email, password: usuario.password}
+                    })
+                })
+            } )
+
+            
+            //console.log('Usuario>>>', usuario)
+            
+        })
+
+
+
+        it('Deve trazer um usuário não admin para login', () => {
+            
+               
+                cy.logar(usuarioNaoAdmin).then( res => {
+                    expect(res.status).to.be.equal(200)
+                    cy.validarContrato(res, "post_login", 200).then(validacao => {  //res = resposta da API, nome da pasta na schema, nome do arquivo JSON
+                    expect(validacao).to.be.equal('Contrato validado')
+                    bearerNaoAdmin = res.body.authorization
+                    })
+                })
+           
+        })
+
     
    
     //////////////post /usuarios negativo
@@ -169,9 +215,13 @@ describe('Testes na api serverest', () => {
             expect(res.status).to.be.equal(201)
             cy.validarContrato(res, "post_produtos", 201).then(validacao => {  
                 expect(validacao).to.be.equal('Contrato validado')
+                produtoExcluir = res.body._id
             })
         })
     })
+
+
+    
 
 
 
@@ -232,8 +282,60 @@ describe('Testes na api serverest', () => {
 
 
 
+//////delete /produtos positivo
+
+    it('Deve excluir um produto e retornar o status code 200', () => {
+       
+        cy.deletarProduto(bearer, produtoExcluir).then( res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, "delete_produtos", 200).then(validacao => {  
+                expect(validacao).to.be.equal('Contrato validado')
+            })
+        })
+    })
 
 
+/////delete /produtos negativos
+
+
+    it('Deve tentar excluir um produto que está em um carrinho e retornar o erro 400', () => {
+        let produtoExcluir = "BeeJh5lz3k6kSIzA"
+
+        cy.deletarProduto(bearer, produtoExcluir).then( res => {
+            expect(res.status).to.be.equal(400)
+            cy.validarContrato(res, "delete_produtos", 400).then(validacao => {  
+                expect(validacao).to.be.equal('Contrato validado')
+            })
+        })
+    })
+
+
+
+    it('Deve tentar excluir usando um token inválido e retornar o status code 401', () => {
+       
+        let bearer = 1234567
+
+        cy.deletarProduto(bearer, produtoExcluir).then( res => {
+            expect(res.status).to.be.equal(401)
+            cy.validarContrato(res, "delete_produtos", 401).then(validacao => {  
+                expect(validacao).to.be.equal('Contrato validado')
+            })
+        })
+    })
+
+
+
+    it('Deve tentar excluir um produto com um usuário que não possui permissão de admin e retornar o status code 403', () => {
+       
+            cy.deletarProduto(bearerNaoAdmin, produtoExcluir).then( res => {
+                expect(res.status).to.be.equal(403)
+                cy.validarContrato(res, "delete_produtos", 403).then(validacao => {  
+                    expect(validacao).to.be.equal('Contrato validado')
+                })
+            })
+        })
+      
+ 
 
 })
     

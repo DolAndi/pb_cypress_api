@@ -37,4 +37,13 @@ export default class Factory {
             "quantidade": `${faker.commerce.productName()}`
         }
     }
+
+    static UsuarioNaoAdmin() {
+        return {
+            "nome": `${faker.name.firstName()} ${faker.name.lastName()}`,
+            "email": `${faker.internet.email()}`,
+            "password": "senha",
+            "administrador": "false"
+        }
+    }
 }

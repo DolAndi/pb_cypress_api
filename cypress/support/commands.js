@@ -230,3 +230,16 @@ Cypress.Commands.add('cadastrarCaracteresInvalidos', (bearer, produto) => {
     })
 })
 
+
+
+Cypress.Commands.add('deletarProduto', (bearer, produto) => {
+    return cy.request({
+        method: 'DELETE',
+        url: `${Cypress.env('base_url')}/produtos/${produto}`,
+        failOnStatusCode: false,
+        body: produto,
+        headers: 
+        {Authorization: bearer}
+       
+    })
+})
