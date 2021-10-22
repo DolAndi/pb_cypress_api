@@ -2,25 +2,29 @@
 
 import Ajv from "ajv";
 
-const ajv = new Ajv({allErrors: true, verbose: true, scrict: false})
+const ajv = new Ajv({ allErrors: true, verbose: true, scrict: false });
 
 Cypress.Commands.add("validarContrato", (res, schema, status) => {
-  cy.fixture(`schema/${schema}/${status}.json`).then(schema => {
-    const validate = ajv. compile(schema)
-    const valid = validate(res.body)
-    
-    if(!valid){
-      var errors = ''
+  cy.fixture(`schema/${schema}/${status}.json`).then((schema) => {
+    const validate = ajv.compile(schema);
+    const valid = validate(res.body);
+
+    if (!valid) {
+      var errors = "";
       for (let each in validate.errors) {
-        let err = validate.errors[each]
-        errors += `\n ${err.instancePath} ${err.message}, but receive ${typeof err.data}`
+        let err = validate.errors[each];
+        errors += `\n ${err.instancePath} ${
+          err.message
+        }, but receive ${typeof err.data}`;
       }
-      throw new Error('Contrato inválido, verificar os seguintes erros: ' + errors)
-      //Cypress.runner.stop()
+      throw new Error(
+        "Contrato inválido, verificar os seguintes erros:" + errors
+      );
     }
-    return true
-  })
-})
+    return "Contrato validado!";
+  });
+  //Cypress.runner.stop()
+});
 
 Cypress.Commands.add("buscarUserAdm", () => {
   cy.request({
@@ -78,15 +82,14 @@ Cypress.Commands.add("cadastrarUsuario", (usuario) => {
     method: "POST",
     url: `${Cypress.env("base_url")}/usuarios`,
     failOnStatusCode: false,
-    body: usuario
+    body: usuario,
   });
 });
-
 
 Cypress.Commands.add("buscarProduto", () => {
   cy.request({
     method: "GET",
     url: `${Cypress.env("base_url")}/produtos`,
-    failOnStatusCode: false
-  })
-})
+    failOnStatusCode: false,
+  });
+});

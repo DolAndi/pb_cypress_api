@@ -4,11 +4,5 @@
         "email": "beltrano@qa.com.br",
         "password": "teste",
         "administrador": "true"
-      },
-      "userNaoCadastrado":  {
-        "nome": "Geronel Mestre",
-        "email": "geronel@geronelmestre.com.br",
-        "password": "mestre",
-        "administrador": "true"
       }
 }
