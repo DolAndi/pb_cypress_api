@@ -70,3 +70,18 @@ Cypress.Commands.add('buscarUsuarios', () =>{
     })
 })
 
+Cypress.Commands.add('buscarProdutoPorId', (id) =>{
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos/${id}`,
+        failOnStatusCode: false
+    })
+})
+Cypress.Commands.add('buscarUsuariosPorId', (id) =>{
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/usuarios/${id}`,
+        failOnStatusCode: false
+    })
+})
+

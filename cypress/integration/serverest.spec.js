@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 import Factory from "../dynamics/factory"
-var bearer 
-var tokenSemAdm 
+var bearer; var tokenSemAdm;var idProduto;var idUsuario
+
 
 describe('Teste dna api serverest', () => {
 
@@ -10,7 +10,8 @@ describe('Teste dna api serverest', () => {
 
         cy.cadastrarUsuario(gerarUsuariosValidoNoAdm).then(res => {
         })
-        cy.cadastrarUsuario(gerarUsuariosValidoStandart).then(res => {
+        cy.cadastrarUsuario(gerarUsuariosValidoStandart).then(res => {// cadastrando o usuario standart valido por que estou usando 
+                                                                      // o server rest online as vezes ele é excluido
         })
 
        cy.fixture('loginCredentials').then(user => {
@@ -31,8 +32,9 @@ describe('Teste dna api serverest', () => {
         })
     })
 
-    it('deve verificar varios logins invalidos con status code 400 ', () => {
+    it('deve verificar logins invalidos con status code 400 ', () => {
         cy.fixture('loginCredentials').then(user => {
+
         cy.logar(user.emailEmBranco).then(res =>{
          expect(res.status).to.be.equal(400);
          expect(res.body).has.property('email').to.be.equal('email não pode ficar em branco')
@@ -59,14 +61,25 @@ describe('Teste dna api serverest', () => {
         })
      })
     })
-    it('cadastrar usuario corretamente deve possuir status 201 e propriedade message e _id ', () =>{
+    it('cadastrar usuario valido deve possuir status 201 e propriedade message e _id ', () =>{
         let usuarioValido = Factory.gerarUsuariosValido()
         
 
         cy.cadastrarUsuario(usuarioValido).then(res => {
             expect(res.status).to.be.equal(201);
+            idUsuario = res.body._id
             expect(res.body).has.property('message').to.be.equal('Cadastro realizado com sucesso')
             expect(res.body).has.property('_id')
+        })
+    })
+    
+    it('buscar usuario por id e validar contrato de GET /usuarios/_id ', () =>{
+        cy.buscarUsuariosPorId(idUsuario).then(res => {
+            expect(res.status).to.be.equal(200);
+            cy.validarContrato(res, "get_usuarios_id", 200).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        
         })
     })
 
@@ -79,18 +92,29 @@ describe('Teste dna api serverest', () => {
         })
     })
 
-    it('cadastrar produto corretamente deve possuir status 201 e propriedade message e _id  ', () =>{
+    it('cadastrar produto valido deve possuir status 201 e propriedade message e _id  ', () =>{
         
         
         let produto = Factory.gerarProdutoBody(); 
         cy.cadastrarProduto(bearer, produto).then(res => {
             expect(res.status).to.be.equal(201);
+            idProduto = res.body._id
             expect(res.body).has.property('message').equal('Cadastro realizado com sucesso')
            expect(res.body).to.have.property('_id')
         })
     })
 
-        it('cadastrar produto com falhas e retornar status 400 e se posui a propriedade message', () =>{
+    it('buscar produto por id e validar contrato de GET /produtos/_id ', () =>{
+        cy.buscarProdutoPorId(idProduto).then(res => {
+            expect(res.status).to.be.equal(200);
+            cy.validarContrato(res, "get_produtos_id", 200).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        
+        })
+    })
+
+        it('cadastrar produtos invalidos e retornar status 400 e se posui a propriedade message,nome e descricao', () =>{
             let produtoExistente = Factory.produtoExistente();let produtoNomeVazio = Factory.produtoNomeVazio()
             let produtoDescricaoVazio = Factory.produtoDescricaoVazio(); let produtoSemNome = Factory.produtoSemNome()
     

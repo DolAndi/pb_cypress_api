@@ -6,7 +6,7 @@ export default class Factory {
     static gerarProdutoBody(){
         
         return  {
-            "nome": `${faker.commerce.product} da linda cor ${faker.commerce.color()} e tambem possui ${faker.commerce.productAdjective}`,
+            "nome": `${faker.commerce.product} sim a cor ${faker.commerce.color()} e tambem possui ${faker.commerce.productAdjective}`,
             "preco": 470,
             "descricao": "Mouse",
             "quantidade": 381
