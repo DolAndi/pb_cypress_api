@@ -12,7 +12,7 @@ Cypress.Commands.add('validarContrato', (res, schema, status)=>{
             var errors = ''
             for( let each in validate.errors){
                 let err = validate.errors[each]
-                errors += `\n${err.instancePath} ${err.message}. but receive ${typeof err.data}`  
+                errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`  
             }
             throw new Error('Contrato inválido, por favor verifique!' + errors)
         }
@@ -20,14 +20,9 @@ Cypress.Commands.add('validarContrato', (res, schema, status)=>{
     })
 })
 
-Cypress.Commands.add('buscarProdutos',() =>{
-    return cy.request({
-        method:'GET',
-        url:`${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false
-    })
-}) 
+/**********************************************************************************************/
 
+//  /login
 Cypress.Commands.add('buscarUsuarioAdmin', () => {
     cy.request({
         method: 'GET',
@@ -51,7 +46,7 @@ Cypress.Commands.add('logar', usuario => {
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/login`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: usuario
     })
 })
@@ -67,54 +62,68 @@ Cypress.Commands.add('loginInvalido', usuario => {
 
 /************************************************************************/
 
+//  /usuarios
+Cypress.Commands.add('listarUsuarios',() =>{
+    return cy.request({
+        method:'GET',
+        url:`${Cypress.env('base_url')}/usuarios`,
+        failOnStatusCode: false
+    })
+}) 
+
 Cypress.Commands.add('cadastroUsuario', (usuarioNovo) =>{
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/usuarios`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: usuarioNovo,
     })
 })
 
-Cypress.Commands.add('cadastrarUsuarioInvalido', () =>{
+Cypress.Commands.add('buscarUsuariosID', (id) =>{
     return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/usuarios`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Fulano da Silva",
-            "email": "beltrano@qa.com.br",
-            "password": "teste",
-            "administrador": "true"
-          }
+        method:'GET',
+        url:`${Cypress.env('base_url')}/usuarios/${id}`,
+        failOnStatusCode: false
     })
 })
 
 /************************************************************************/
 
+//  /produtos
+Cypress.Commands.add('listarProdutos',() =>{
+    return cy.request({
+        method:'GET',
+        url:`${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false
+    })
+}) 
+
 Cypress.Commands.add('cadastrarProduto', (bearer, produto) =>{
     return cy.request({
         method: 'POST',
         url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: true,
+        failOnStatusCode: false,
         body: produto,
           headers: {Authorization: bearer}
-
     })
 })
 
-Cypress.Commands.add('produtoEmUso', (bearer) =>{
+Cypress.Commands.add('buscarProdutosID', (id) =>{
     return cy.request({
-        method: 'POST',
-        url: `${Cypress.env('base_url')}/produtos`,
-        failOnStatusCode: false,
-        body: {
-            "nome": "Lápiz azul",
-            "preco": 400,
-            "descricao": "Lapis",
-            "quantidade": 400
-          },
-          headers: {Authorization: bearer}
-
+        method:'GET',
+        url:`${Cypress.env('base_url')}/produtos/${id}`,
+        failOnStatusCode: false
     })
 })
+
+/************************************************************************/
+
+//  /carrinhos
+Cypress.Commands.add('listarCarrinhos',() =>{
+    return cy.request({
+        method:'GET',
+        url:`${Cypress.env('base_url')}/carrinhos`,
+        failOnStatusCode: false
+    })
+}) 
