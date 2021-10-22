@@ -88,6 +88,22 @@ Cypress.Commands.add('cadastrarProduto', (bearer,produto) => {
         }
     })
 })
+Cypress.Commands.add('DeletarProdutoPorId', (_id)=>{
+    return cy.request({
+        method: 'DELETE',
+        url: `${Cypress.env('base_url')}/produtos/${_id}`,
+        failOnStatusCode: false
+    })
+
+})
+Cypress.Commands.add('BuscarProdutoPorId', (_id)=>{
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos/${_id}`,
+        failOnStatusCode: false
+    })
+
+})
 
 Cypress.Commands.add('cadastrarUsuario', (usuario)=>{
     return cy.request({
@@ -96,4 +112,22 @@ Cypress.Commands.add('cadastrarUsuario', (usuario)=>{
         failOnStatusCode: false,
         body : usuario
     })
+})
+
+Cypress.Commands.add('DeletarUsuarioPorId', (_id)=>{
+    return cy.request({
+        method: 'DELETE',
+        url: `${Cypress.env('base_url')}/usuarios/${_id}`,
+        failOnStatusCode: false
+    })
+
+})
+
+Cypress.Commands.add('BuscarUsuarioPorId', (_id)=>{
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/usuarios/${_id}`,
+        failOnStatusCode: false
+    })
+
 })

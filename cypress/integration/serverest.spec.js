@@ -68,6 +68,37 @@ describe('Testes na api serverest', () => {
         })
     })
 
+    it('Deve Deletar um Usuario', ()=>{
+        let usuario = Factory.gerarUsuarioBody()
+
+        cy.cadastrarUsuario(usuario).then(res=>{
+            expect(res.status).to.equal(201)
+            expect(res.body).to.have.property('message', 'Cadastro realizado com sucesso')
+            const ID = res.body._id
+            cy.validarContrato(res, 'post_usuario', 201).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+                cy.DeletarUsuarioPorId(ID).then(res=>{
+                    expect(res.status).to.equal(200)
+                })
+            })
+        })
+    })
+    it('Deve Buscar um Usuario', ()=>{
+        let usuario = Factory.gerarUsuarioBody()
+
+        cy.cadastrarUsuario(usuario).then(res=>{
+            expect(res.status).to.equal(201)
+            expect(res.body).to.have.property('message', 'Cadastro realizado com sucesso')
+            const ID = res.body._id
+            cy.validarContrato(res, 'post_usuario', 201).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+                cy.BuscarUsuarioPorId(ID).then(res=>{
+                    expect(res.status).to.equal(200)
+                })
+            })
+        })
+    })
+
     it('Deve cadastrar um produto com Sucesso (201)', () =>{
         let produto = Factory.gerarProdutoBody()
 
@@ -79,6 +110,8 @@ describe('Testes na api serverest', () => {
             })
         })
     })
+
+
     it('Deve tentar Cadastrar um produto ja cadastrado (400)"', ()=>{
         cy.fixture('loginCredentials').then((user)=>{
             let produto = user.produtoJaCadastrado
@@ -93,6 +126,22 @@ describe('Testes na api serverest', () => {
 
         })
     })
+    it('Deve Buscar um produto)', () =>{
+        let produto = Factory.gerarProdutoBody()
+
+        cy.cadastrarProduto(bearer,produto).then(res=>{
+            expect(res.status).to.be.equal(201)
+            expect(res.body).to.have.all.keys('message', '_id')
+            cy.validarContrato(res, 'post_produto', 201).then( validacao=>{
+                expect(validacao).to.be.equal('Contrato validado!')
+                const ID = res.body._id
+                cy.BuscarProdutoPorId(ID).then(res=>{
+                    expect(res.status).to.equal(200)
+                })
+            })
+        })
+    })
+    
     it('Deve realizar teste de contrato sobre a requisição GET na rota /produto', ()=>{
         cy.buscarProdutos().then(res =>{
             expect(res.status).to.be.equal(200)
@@ -102,4 +151,3 @@ describe('Testes na api serverest', () => {
         })
     })
 })
-
