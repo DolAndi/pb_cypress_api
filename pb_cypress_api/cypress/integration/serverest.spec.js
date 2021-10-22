@@ -15,8 +15,11 @@ describe('Testes na api serverest', () => {
         cy.fixture('loginCredentials').then((user) =>{
             cy.logar(user.valido).then( res => {
                 expect(res.status).to.equal(200)
-                expect(res.body).to.have.property('authorization')
+                expect(res.body).to.have.property('message', 'bearer')
                 bearer = res.body.authorization
+            cy.validarContrato(res, "post_login", 200).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
         })
             
@@ -29,24 +32,39 @@ describe('Testes na api serverest', () => {
                 expect(res.status).to.equal(400)
                 expect(res.body).to.have.property('message')
                 bearer = res.body.authorization
+            cy.validarContrato(res, "post_login",400).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
         })
             
     })
 
+
+    it('Deve trazer um usuário inválido de um json e realizar login com falha', () => {
+        cy.fixture('failCredentials').then( user => {
+            cy.logar(user).then( res => {
+                expect(res.status).to.equal(400)
+                expect(res.body).to.have.property('message')
+                expect(res.body.message).to.be.equal('Email e/ou senha inválidos')
+            cy.validarContrato(res, "post_login", 400).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
+            })
+        })
+    })
+
+
 ///Teste POST Produto
 
     it('Deve cadastrar um produto já cadastrado', () => {
-        cy.cadastrarProduto(bearer).then(res  =>{
-            let produto = {
-                "nome":"Caneta branca"
-                "preço":470
-                "descrição":"caneta"
-                "quantidade": 301
-            }
-            cy.cadastrarProduto(bearer,produto).then(res =>{
+        cy.fixture('productCredentials').then(res => {
+            cy.cadastrarProduto(bearer,produto.productInvalid).then(res =>{
                 expect(res.status).to.equal(400)
                 expect(res.body).to.have.property('message')
+            cy.validarContrato(res, "post_produto", 400).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
 
         })
@@ -55,8 +73,11 @@ describe('Testes na api serverest', () => {
         cy.cadastrarProduto(bearer).then(res  =>{
             let produto = Factory.gerarProdutoBody
             cy.cadastrarProduto(bearer,produto).then(res =>{
-                expect(res.status).to.equal(200)
+                expect(res.status).to.equal(201)
                 expect(res.body).to.have.property('message', '_id')
+             cy.validarContrato(res, "post_produto", 201).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
 
         })
@@ -64,16 +85,13 @@ describe('Testes na api serverest', () => {
 
 // Teste POST Usuario
     it('Deve cadastrar um user já cadastrado', () => {
-        cy.cadastrarUsuario(usuarios).then(res  =>{
-            let usuarios = {
-                    "nome": "Fulano da Silva",
-                    "email": "beltrano@qa.com.br",
-                    "password": "teste",
-                    "administrador": "true"               
-            }
-            cy.cadastrarUsuario(usuarios).then(res =>{
+        cy.fixture('userCredentials').then(res => {
+            cy.cadastrarUsuario(usuarios.userInvalid).then(res =>{
                 expect(res.status).to.equal(400)
                 expect(res.body).to.have.property('message')
+            cy.validarContrato(res, "post_usuarios", 400).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
 
         })
@@ -82,23 +100,29 @@ describe('Testes na api serverest', () => {
         cy.cadastrarUsuario(usuarios).then(res  =>{
             let usuarios = Factory.gerarUserBody
             cy.cadastrarUsuario(usuarios).then(res =>{
-                expect(res.status).to.equal(200)
+                expect(res.status).to.equal(201)
                 expect(res.body).to.have.property('message', '_id')
+            cy.validarContrato(res, "post_usuarios", 201).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
 
         })
     })
 
-})
+}) 
 
 ///Teste POST Carrinho
     it.only('Deve cadastrar carrinho valido', () => {
 
         cy.fixture('carrinhoCredentials').then((produto) =>{
             cy.cadastrarCarrinho(produto.produtoValido).then( res => {
-                expect(res.status).to.equal(201)
+                expect(res.status).to.equal(200)
                 expect(res.body).to.have.property('message', '_id')
                 bearer = res.body.authorization
+            cy.validarContrato(res, "post_carrinho", 200).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
         })
             
@@ -111,7 +135,25 @@ describe('Testes na api serverest', () => {
                 expect(res.status).to.equal(400)
                 expect(res.body).to.have.property('message')
                 bearer = res.body.authorization
+            cy.validarContrato(res, "post_carrinho", 400).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
             })
         })
             
     })
+
+
+
+   
+    it.only('Deve realizar teste de contrato sobre a requisição POST na rota /produto', () => {
+        let produto = Factory.retornaProduto("valido")
+        cy.cadastrarProduto(produto, bearer).then( res => {
+            expect(res.status).to.equal(201)
+            cy.validarContrato(res, "post_produto", 201).then( valid => {
+                if(expect(valid).to.be.true) 
+                    cy.log("Validado contrato!")
+            })
+        })
+    })
+

@@ -1,4 +1,36 @@
+
 /// <reference types="cypress" />
+import Ajv from 'ajv';
+const ajv = new Ajv({allErrors: true, verbose: true, strict: false})
+
+
+Cypress.Commands.add('validarcontrato', (res, schema, status) =>{
+    cy.fixture('schema/$(schema)/$(status).json').then (schema =>{
+        const validate = ajv.compile(schema)
+        const valid = validate(res.body)
+
+        if(!valid){
+            var errors = ''
+            for(let each in validate.errors){
+                let err = validate.errors[each]7
+                errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`
+            }
+            cy.log('What we are validating == ', res.body)
+            throw new Error('Contract validation erros, please verify!' + errors)
+            Cypress.runner.stop()
+        }
+        return true
+    })
+})
+
+Cypress.Commands.add('buscarProdutos', () => {
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos`,
+        failOnStatusCode: false
+    
+    })
+})
 
 Cypress.Commands.add('buscarUsuarioAdmin', () => {
     cy.request({
