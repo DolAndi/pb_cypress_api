@@ -5,11 +5,12 @@ var tokenSemAdm
 
 describe('Teste dna api serverest', () => {
 
-     it('deve verificar login valido e varios logins invalidos ', () => {
-        let gerarUsuariosValidoNoAdm = Factory.gerarUsuariosValidoNoAdm()
+     it('deve verificar login valido com status code 200 ', () => {
+        let gerarUsuariosValidoNoAdm = Factory.gerarUsuariosValidoNoAdm();let gerarUsuariosValidoStandart = Factory.gerarUsuariosValidoStandart()
 
         cy.cadastrarUsuario(gerarUsuariosValidoNoAdm).then(res => {
-            console.log(res.body)
+        })
+        cy.cadastrarUsuario(gerarUsuariosValidoStandart).then(res => {
         })
 
        cy.fixture('loginCredentials').then(user => {
@@ -24,37 +25,40 @@ describe('Teste dna api serverest', () => {
                 expect(res.body).has.property('authorization')
                 tokenSemAdm = res.body.authorization
 
-                
-               cy.logar(user.emailEmBranco).then(res =>{
-                expect(res.status).to.be.equal(400);
-                expect(res.body).has.property('email').to.be.equal('email não pode ficar em branco')
-               })
-               
-               cy.logar(user.senhaEmBranco).then(res =>{
-                expect(res.status).to.be.equal(400);
-                expect(res.body).has.property('password').to.be.equal('password não pode ficar em branco')
-               })
-
-               cy.logar(user.semCampoEmail).then(res =>{
-                expect(res.status).to.be.equal(400);
-                expect(res.body).has.property('email').to.be.equal('email é obrigatório')
-                
-               })
-               cy.logar(user.semCampoSenha).then(res =>{
-                expect(res.status).to.be.equal(400);
-                expect(res.body).has.property('password').to.be.equal('password é obrigatório')
-               })
-               cy.logar(user.semCampos).then(res =>{
-                expect(res.status).to.be.equal(400);
-                expect(res.body).has.property('password').to.be.equal('password é obrigatório')
-                expect(res.body).has.property('email').to.be.equal('email é obrigatório')
-               })
-
-           })
-       })
+                    
+            })
+        })
+        })
     })
-})
 
+    it('deve verificar varios logins invalidos con status code 400 ', () => {
+        cy.fixture('loginCredentials').then(user => {
+        cy.logar(user.emailEmBranco).then(res =>{
+         expect(res.status).to.be.equal(400);
+         expect(res.body).has.property('email').to.be.equal('email não pode ficar em branco')
+        })
+        
+        cy.logar(user.senhaEmBranco).then(res =>{
+         expect(res.status).to.be.equal(400);
+         expect(res.body).has.property('password').to.be.equal('password não pode ficar em branco')
+        })
+
+        cy.logar(user.semCampoEmail).then(res =>{
+         expect(res.status).to.be.equal(400);
+         expect(res.body).has.property('email').to.be.equal('email é obrigatório')
+         
+        })
+        cy.logar(user.semCampoSenha).then(res =>{
+         expect(res.status).to.be.equal(400);
+         expect(res.body).has.property('password').to.be.equal('password é obrigatório')
+        })
+        cy.logar(user.semCampos).then(res =>{
+         expect(res.status).to.be.equal(400);
+         expect(res.body).has.property('password').to.be.equal('password é obrigatório')
+         expect(res.body).has.property('email').to.be.equal('email é obrigatório')
+        })
+     })
+    })
     it('cadastrar usuario corretamente deve possuir status 201 e propriedade message e _id ', () =>{
         let usuarioValido = Factory.gerarUsuariosValido()
         

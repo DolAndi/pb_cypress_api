@@ -50,6 +50,7 @@ export default class Factory {
             "password": "teste",
             "administrador": "true"
           }
+          
     }
     static gerarUsuariosValidoNoAdm(){
         return {
@@ -68,4 +69,13 @@ export default class Factory {
             "administrador": "true"
           }
     }
+
+    static gerarUsuariosValidoStandart(){
+        return {
+            "nome": "Fulano da Silva",
+            "email": "fulano@qa.com",
+            "password": "teste",
+            "administrador": "true"
+          }
+}
 }
