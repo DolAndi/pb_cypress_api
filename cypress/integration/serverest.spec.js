@@ -2,7 +2,10 @@
 import Factory from "../dynamics/factory"
 var bearer; var tokenSemAdm;var idProduto;var idUsuario
 
-
+/// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//               TESTES DE LOGIN
+    /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
 describe('Teste dna api serverest', () => {
 
      it('deve verificar login valido com status code 200 ', () => {
@@ -60,6 +63,12 @@ describe('Teste dna api serverest', () => {
          expect(res.body).has.property('email').to.be.equal('email é obrigatório')
         })
      })
+
+
+     /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//               TESTES DE USUARIOS
+    /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     })
     it('cadastrar usuario valido deve possuir status 201 e propriedade message e _id ', () =>{
         let usuarioValido = Factory.gerarUsuariosValido()
@@ -73,12 +82,10 @@ describe('Teste dna api serverest', () => {
         })
     })
     
-    it('buscar usuario por id e validar contrato de GET /usuarios/_id ', () =>{
+    it('buscar usuario por id verificando se possui status 200 ', () =>{
         cy.buscarUsuariosPorId(idUsuario).then(res => {
             expect(res.status).to.be.equal(200);
-            cy.validarContrato(res, "get_usuarios_id", 200).then(validacao =>{
-                expect(validacao).to.be.equal('Contrato valido') 
-            })
+            
         
         })
     })
@@ -91,11 +98,15 @@ describe('Teste dna api serverest', () => {
             expect(res.body).has.property('message').to.be.equal('Este email já está sendo usado')
         })
     })
-
+/// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//               TESTES DE PRODUTOS
+    /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     it('cadastrar produto valido deve possuir status 201 e propriedade message e _id  ', () =>{
         
         
         let produto = Factory.gerarProdutoBody(); 
+
         cy.cadastrarProduto(bearer, produto).then(res => {
             expect(res.status).to.be.equal(201);
             idProduto = res.body._id
@@ -103,14 +114,16 @@ describe('Teste dna api serverest', () => {
            expect(res.body).to.have.property('_id')
         })
     })
+    it('deve buscar produtos e se possui status code 200', () => {
+        cy.buscarProdutos().then(res => {
+            expect(res.status).to.equal(200)
+        })
+    })
 
-    it('buscar produto por id e validar contrato de GET /produtos/_id ', () =>{
+    it('buscar produto por id verificar se possui status code 200 ', () =>{
         cy.buscarProdutoPorId(idProduto).then(res => {
             expect(res.status).to.be.equal(200);
-            cy.validarContrato(res, "get_produtos_id", 200).then(validacao =>{
-                expect(validacao).to.be.equal('Contrato valido') 
-            })
-        
+
         })
     })
 
@@ -139,24 +152,14 @@ describe('Teste dna api serverest', () => {
 
 
     /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//               TESTES DE VALIDAÇÃO DE CONTRATOS
+//               TESTES DE VALIDAÇÃO DE CONTRATOS PRODUTOS
     /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
-    
-    it('deve realizar o validação de contrato de GET /produtos', () =>{
-        cy.buscarProdutos().then(res =>{
-            expect(res.status).to.be.equal(200)
-            cy.validarContrato(res, "get_produtos", 200).then(validacao =>{
-                expect(validacao).to.be.equal('Contrato valido')
-            }) 
-            
-        })
-    })
+
 
     it('deve realizar o validação de contrato POST /produtos', () =>{
         let produto = Factory.gerarProdutoBody(); let produtoExistente = Factory.produtoExistente();
         
-    
         cy.cadastrarProduto(bearer, produto).then(res =>{
             expect(res.status).to.be.equal(201)
             
@@ -188,7 +191,38 @@ describe('Teste dna api serverest', () => {
             })
 
     })
+    it('deve validar GET /produtos ', () => {
 
+        cy.buscarProdutoPorId(idProduto).then(res => {
+            expect(res.status).to.be.equal(200);        
+        
+        cy.validarContrato(res, "get_produtos_id", 200).then(validacao =>{
+            expect(validacao).to.be.equal('Contrato valido') 
+        })
+    })
+    })
+
+
+
+    it('validar contrato GET/produtos/_id ', () =>{
+        cy.buscarProdutoPorId(idProduto).then(res => {
+            expect(res.status).to.be.equal(200);
+            cy.validarContrato(res, "get_produtos_id", 200).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        })
+        cy.buscarProdutoPorId('idProduto').then(res => {
+            expect(res.status).to.be.equal(400);
+            cy.validarContrato(res, "get_produtos_id", 400).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        })
+        
+    })
+/// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//               TESTES DE VALIDAÇÃO DE CONTRATOS DE USUARIOS
+    /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     
     it('deve realizar o validação de contrato de GET /usuarios', () =>{
         cy.buscarUsuarios().then(res =>{
@@ -222,8 +256,28 @@ describe('Teste dna api serverest', () => {
             }) 
         })
     })
+    
+    it('validar contrato GET /usuarios/_id', () => {
+        cy.buscarUsuariosPorId(idUsuario).then(res => {
+            expect(res.status).to.be.equal(200);
+            cy.validarContrato(res, "get_usuarios_id", 200).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        
+        })
+        cy.buscarUsuariosPorId("idUsuario").then(res => {
+            expect(res.status).to.be.equal(400);
+            cy.validarContrato(res, "get_usuarios_id", 400).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato valido') 
+            })
+        
+        })
+    })
 
-   
+   /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//               TESTES DE VALIDAÇÃO DE CONTRATOS DE LOGIN
+    /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
     it('deve realizar o validação de contrato de POST /login', () =>{
         cy.fixture('loginCredentials').then(user => {
             cy.logar(user.valido).then(res => {
@@ -239,9 +293,10 @@ describe('Teste dna api serverest', () => {
                 cy.validarContrato(res, "post_login", 400).then(validacao =>{
                     expect(validacao).to.be.equal('Contrato valido')
 
-        }) 
+            }) 
+        })
+        })
     })
-    })
-})
+
 
 })

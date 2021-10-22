@@ -13,7 +13,7 @@ Cypress.Commands.add('validarContrato',(res, schema, status) =>{
             for(let each in validate.errors){
                 let err = validate.errors[each]
                 errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`
-                
+                console.log(errors)
             }
             throw new Error('Contrato invalido, por favor verifique ',errors)
             
