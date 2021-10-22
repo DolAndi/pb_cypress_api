@@ -17,6 +17,17 @@ export default class Factory {
         }
     }
 
+    static gerarProdutoExistente(){
+        return {
+            
+            "nome": "Logitech MX Vertical",
+            "preco": 470,
+            "descricao": "Mouse",
+            "quantidade": 381
+              
+        }
+    }
+
     static gerarProdutoCorreto() {
         return{
             
@@ -28,11 +39,21 @@ export default class Factory {
     }
     
     
+    static gerarUsuarioEmailFixo() {
+        return{ 
+
+            "nome": faker.name.findName(),
+            "email": "Loyce.Lebsack@example.net",
+            "password": faker.internet.password(),
+            "administrador": faker.datatype.boolean().toString(), //true ou false => "true" or "false"
+        }
+    }
+
     static gerarUsuarioCompleto() {
         return{ 
 
             "nome": faker.name.findName(),
-            "email": email,
+            "email": faker.internet.exampleEmail(),
             "password": faker.internet.password(),
             "administrador": faker.datatype.boolean().toString(), //true ou false => "true" or "false"
         }

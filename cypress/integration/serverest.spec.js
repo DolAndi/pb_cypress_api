@@ -5,8 +5,9 @@ const faker = require('faker');
 
 import Factory from '../dynamics/factory'
 
+var tokenLogin
 
-describe('Teste com POST usuarios', () => {
+/*describe('Teste com POST usuarios', () => {
     
 
     it('Deve cadastrar um usuario - Cenário feliz', () => {
@@ -33,7 +34,8 @@ describe('Teste com POST usuarios', () => {
         })
     })
 })
-
+*/
+/*
 describe("Teste com POST produtos", () => {
     const getToken = (isAdmin) => {
         const user = {
@@ -110,56 +112,9 @@ describe("Teste com POST produtos", () => {
             })
         })
     })
-
-    it('Deve realizar teste de contrato sobre a requisição GET na rota /produto', () => {
-        cy.buscarProdutos().then( res => {
-            expect(res.status).to.equal(200)
-            cy.validarContrato(res, "get_produtos", 200).then(validacao => {
-                expect(validacao).to.be.equal('Contrato validado!')
-            })
-            // res = resposta da api / get_produtos é o nome da pasta do próprio schema / e o 200 é o nome do arquivo json
-        })
-    })
-
-    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto', () => {
-        cy.cadastrarProduto().then( res => {
-            expect(res.status).to.equal(201)
-            cy.validarContrato(res, "post_produtos", 201).then(validacao => {
-                expect(validacao).to.be.equal('Contrato validado!')
-            })
-        })
-    })
-
-
-    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Já existe produto com esse nome', () => {
-        cy.cadastrarProduto().then( res => {
-            expect(res.status).to.equal(400)
-            cy.validarContrato(res, "post_produtos", 400).then(validacao => {
-                expect(validacao).to.be.equal('Contrato validado!')
-            })
-        })
-    })
-
-    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Token ausente, inválido ou expirado', () => {
-        cy.cadastrarProduto().then( res => {
-            expect(res.status).to.equal(401)
-            cy.validarContrato(res, "post_produtos", 401).then(validacao => {
-                expect(validacao).to.be.equal('Contrato validado!')
-            })
-        })
-    })
-
-    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Rota exclusiva para administradores', () => {
-        cy.cadastrarProduto().then( res => {
-            expect(res.status).to.equal(403)
-            cy.validarContrato(res, "post_produtos", 403).then(validacao => {
-                expect(validacao).to.be.equal('Contrato validado!')
-            })
-        })
-    })
-
 })
 
+/*
 describe('Testes com POST login', () => {
     it('Fazer Login - Cenário Feliz', () => {
 
@@ -227,19 +182,38 @@ describe('Testes com POST login', () => {
             })
         })
     })
+})
 
-    it('Deve realizar teste de contrato sobre a requisição POST na rota /login', () => {
-        cy.fixture('credenciaisParaLogin').then( json => {
-        cy.wrap({ email: json.emailComSenhaValidos.email, password: json.emailComSenhaValidos.password}).as('Crendenciais')
-        cy.get('@Crendenciais').then(user => {
-        cy.fazerLogin().then( res => {
+*/
+
+
+
+
+// _______________________________________________________________________
+// Teste de validação de contrato
+// _______________________________________________________________________
+/*
+describe('Validações de contrato na rota produtos', () => {
+
+    it('Deve realizar teste de contrato sobre a requisição GET na rota /produto', () => {
+        cy.buscarProdutos().then( res => {
             expect(res.status).to.equal(200)
-            cy.log(res.body)
-            cy.validarContrato(res, "post_produtos", 200).then(validacao => {
+            cy.validarContrato(res, "get_produtos", 200).then(validacao => {
                 expect(validacao).to.be.equal('Contrato validado!')
-                    })
-                 })
+            })
+            // res = resposta da api / get_produtos é o nome da pasta do próprio schema / e o 200 é o nome do arquivo json
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Cadastro com sucesso', () => {
+        let product = Factory.gerarProdutoCorreto();
+        console.log(product)
+
+        cy.cadastrarProduto(tokenLogin, product).then(res => {
+            expect(res.status).to.be.equal(201)
+            cy.validarContrato(res, "post_produtos", 201).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
             })
         })
     })
-})
+}) */
