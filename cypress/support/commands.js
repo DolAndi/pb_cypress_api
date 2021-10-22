@@ -38,12 +38,21 @@ Cypress.Commands.add("listarUSERS", () => {
     })
 })
 
+Cypress.Commands.add("pegarUserExpecifico", (usuario) => {
+    return cy.request({
+        method: "GET",
+        url: `${Cypress.env("base_url")}/usuarios`,
+        failOnStatusCode: false,
+        body: usuario
+    })
+})
+
 Cypress.Commands.add("criarProduto", (bearer, produto) => {
     return cy.request({
         method: "POST",
         url: `${Cypress.env("base_url")}/produtos`,
         failOnStatusCode: false,
-        headers: {Authorization: bearer.replace("bearer", "")},
+        headers: {Authorization: bearer},
         body: produto
     })
 })
@@ -56,12 +65,21 @@ Cypress.Commands.add("buscarProdutos", () => {
     })
 })
 
+Cypress.Commands.add("buscarNoCarrinho", (id, precoTotal, quantidadeTotal, idUsuario) => {
+    cy.request({
+        method: "GET",
+        url: `${Cypress.env("base_url")}/carrinhos`,
+        failOnStatusCode: false,
+        body: id, precoTotal, quantidadeTotal, idUsuario
+    })
+})
+
 Cypress.Commands.add("cadastrarCarrinho", (bearer, produto) => {
     return cy.request({
         method: "POST",
         url: `${Cypress.env("base_url")}/carrinho`,
         failOnStatusCode: false,
-        headers: {Authorization: bearer.replace("bearer", "")},
+        headers: {Authorization: bearer},
         body: produto
     })
 })

@@ -1,0 +1,83 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "type": "object",
+    "required": [
+        "quantidade",
+        "carrinhos"
+    ],
+    "properties": {
+        "quantidade": {
+            "type": "integer"
+        },
+        "carrinhos": {
+            "type": "array",
+            "additionalItems": true,
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": [
+                            "produtos",
+                            "precoTotal",
+                            "quantidadeTotal",
+                            "idUsuario",
+                            "_id"
+                        ],
+                        "properties": {
+                            "produtos": {
+                                "type": "array",
+                                "additionalItems": true,
+                                "items": {
+                                    "anyOf": [
+                                        {
+                                            "type": "array",
+                                            "additionalItems": true,
+                                            "items": {
+                                                "anyOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "required": [
+                                                            "idProduto",
+                                                            "quantidade",
+                                                            "precoUnitario"
+                                                        ],
+                                                        "properties": {
+                                                            "idProduto": {
+                                                                "type": "string"
+                                                            },
+                                                            "quantidade": {
+                                                                "type": "integer"
+                                                            },
+                                                            "precoUnitario": {
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        "additionalProperties": true
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "precoTotal": {
+                                "type": "integer"
+                            },
+                            "quantidadeTotal": {
+                                "type": "integer"
+                            },
+                            "idUsuario": {
+                                "type": "string"
+                            },
+                            "_id": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": true
+                    }
+                ]
+            }
+        }
+    },
+    "additionalProperties": true
+}

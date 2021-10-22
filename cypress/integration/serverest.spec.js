@@ -2,6 +2,7 @@
 
 import Factory from "../dynamics/factory.js"
 
+var idUsuario
 var bearer
 
 describe("REDO do Zero dos Testes para API ServeRest", () => {
@@ -61,6 +62,17 @@ describe("REDO do Zero dos Testes para API ServeRest", () => {
             })
         })
 
+        it("Deve pegar um id com a resposta de GET usuarios", () => {
+            cy.fixture("loginCredentials").then((usuario) => {
+                cy.pegarUserExpecifico(usuario.valido).then( res => {
+                    expect(res.statusCode === 200);
+                    expect(res.body.usuarios).to.be.a("array")
+                    expect(res.body.usuarios[0]._id).to.be.a("string")
+                    idUsuario = res.body.usuarios[0]._id
+                })
+            })
+        })
+
         it("Validar testes de contrato da resposta de GET usuarios", () => {
             cy.listarUSERS().then( res => {
                 expect(res.statusCode === 200);
@@ -101,6 +113,20 @@ describe("REDO do Zero dos Testes para API ServeRest", () => {
                 cy.validarContrato(res, "get_produtos", 200).then( validacao => {
                     //res = resposta | pasta | arquivo .json
                     expect(validacao).to.be.equal("Contrato valido.")
+                })
+            })
+        })
+
+    })
+
+    describe("Testes para CARRINHO", () => {
+        it("Deve utilizar GET para listar uma lista dos itens no carrinho do usuario requesitado", () => {
+            cy.fixture("loginCredentials").then((usuario) => {
+                cy.pegarUserExpecifico(usuario.valido).then( res => {
+                    idUsuario = res.body.usuarios[0]._id;
+                    cy.buscarNoCarrinho(idUsuario).then (res => {
+                        expect(res.statusCode === 200)
+                    })
                 })
             })
         })
