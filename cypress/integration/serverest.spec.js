@@ -60,7 +60,18 @@ describe('Testes na api serverest', () => {
     })
 
 
+    //****************************************************************************************************************/
 
+
+    it.only('Deve realizar teste de contrato sobre a requisição GET na rota /produto', () => {
+        cy.cadastrarProduto().then( res => {
+            expect(res.body).to.be.equal(201)
+            cy.validarContrato(res, "post_produtos", 201).then( validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+            //res = resposta da api, nome da pasta na schema, nome do arquivo json 
+        })
+    })
 
 
 
