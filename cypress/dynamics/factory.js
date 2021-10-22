@@ -2,20 +2,31 @@ const faker = require('faker');
 
 
 
-const name = faker.commerce.productName();
+//const name = faker.commerce.productName();
 const email = faker.internet.exampleEmail();
 
 export default class Factory {
     
-    static gerarProdutoCompleto() {
+    static gerarProdutoErrado() {
         return{
             
-            "nome": name,
+            "nome": 'name',
             "preco": faker.datatype.number({ min: 1}),
             "descricao": faker.commerce.productDescription(),
             "quantidade": faker.datatype.number({ min: 1}),
         }
     }
+
+    static gerarProdutoCorreto() {
+        return{
+            
+            "nome": `${faker.commerce.productName()}`,
+            "preco": faker.datatype.number({ min: 1}),
+            "descricao": faker.commerce.productDescription(),
+            "quantidade": faker.datatype.number({ min: 1}),
+        }
+    }
+    
     
     static gerarUsuarioCompleto() {
         return{ 

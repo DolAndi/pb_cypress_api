@@ -21,7 +21,6 @@ describe('Teste com POST usuarios', () => {
         })
     })
 
-    /*Revisar pois não consegui gerar usuario igual */
 
     it('Deve cadastrar um usuario - Email já em uso - Cenário triste', () => {
         
@@ -55,7 +54,7 @@ describe("Teste com POST produtos", () => {
     it("Deve cadastrar um produto - Cenário feliz", () => {
         getToken("true")
         
-        const produto = Factory.gerarProdutoCompleto()
+        const produto = Factory.gerarProdutoCorreto()
 
         cy.get('@tokenLogin').then(tokenLogin => {
             cy.cadastrarProduto(produto,tokenLogin).then(res => {
@@ -69,19 +68,17 @@ describe("Teste com POST produtos", () => {
     })
 
 
-    //Revisar pois nao consegui gerar com o mesmo nome
-
     it("Deve cadastrar um produto - Já existe produto com esse nome - Cenário triste", () => {
         getToken("true")
 
-        const produto = Factory.gerarProdutoCompleto()
+        const produto = Factory.gerarProdutoErrado()
             
         cy.get('@tokenLogin').then(tokenLogin => {
             cy.cadastrarProduto(produto,tokenLogin).then(res => {
-                cy.log(res)
-                //expect(res.status).to.equal(401)
-                //expect(res.body.message).to.equal('Já existe produto com esse nome')
-                //expect(res.body).to.not.have.property('_id')
+                //cy.log(res)
+                expect(res.status).to.equal(400)
+                expect(res.body).to.has.property('message').to.be.equal("Já existe produto com esse nome")
+                expect(res.body).to.not.have.property('_id')
             })
         })
     })
@@ -89,7 +86,7 @@ describe("Teste com POST produtos", () => {
 
     it("Deve cadastrar um produto - Token ausente ou inválido - Cenário triste", () => {
         
-        const produto = Factory.gerarProdutoCompleto()
+        const produto = Factory.gerarProdutoCorreto()
 
         cy.cadastrarProduto(produto, 'tokenInvalido').then(res => {
             //cy.log(res)
@@ -98,10 +95,11 @@ describe("Teste com POST produtos", () => {
             expect(res.body).to.not.have.property('_id')
         })
     })
+
     it("Deve cadastrar um produto - Rota exclusiva para administradores - Cenário triste", () => {
         getToken("false")
 
-        const produto = Factory.gerarProdutoCompleto()
+        const produto = Factory.gerarProdutoCorreto()
 
         cy.get('@tokenLogin').then(tokenLogin => {
             cy.cadastrarProduto(produto,tokenLogin).then(res => {
@@ -112,6 +110,54 @@ describe("Teste com POST produtos", () => {
             })
         })
     })
+
+    it('Deve realizar teste de contrato sobre a requisição GET na rota /produto', () => {
+        cy.buscarProdutos().then( res => {
+            expect(res.status).to.equal(200)
+            cy.validarContrato(res, "get_produtos", 200).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+            // res = resposta da api / get_produtos é o nome da pasta do próprio schema / e o 200 é o nome do arquivo json
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto', () => {
+        cy.cadastrarProduto().then( res => {
+            expect(res.status).to.equal(201)
+            cy.validarContrato(res, "post_produtos", 201).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
+
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Já existe produto com esse nome', () => {
+        cy.cadastrarProduto().then( res => {
+            expect(res.status).to.equal(400)
+            cy.validarContrato(res, "post_produtos", 400).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Token ausente, inválido ou expirado', () => {
+        cy.cadastrarProduto().then( res => {
+            expect(res.status).to.equal(401)
+            cy.validarContrato(res, "post_produtos", 401).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /produto - Rota exclusiva para administradores', () => {
+        cy.cadastrarProduto().then( res => {
+            expect(res.status).to.equal(403)
+            cy.validarContrato(res, "post_produtos", 403).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
+
 })
 
 describe('Testes com POST login', () => {
@@ -178,6 +224,21 @@ describe('Testes com POST login', () => {
                     expect(res.body.message).to.equal('Email e/ou senha inválidos')
                     expect(res.body).to.not.have.property('authorization')
                 })
+            })
+        })
+    })
+
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /login', () => {
+        cy.fixture('credenciaisParaLogin').then( json => {
+        cy.wrap({ email: json.emailComSenhaValidos.email, password: json.emailComSenhaValidos.password}).as('Crendenciais')
+        cy.get('@Crendenciais').then(user => {
+        cy.fazerLogin().then( res => {
+            expect(res.status).to.equal(200)
+            cy.log(res.body)
+            cy.validarContrato(res, "post_produtos", 200).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+                    })
+                 })
             })
         })
     })
