@@ -35,7 +35,7 @@ describe('Teste dna api serverest', () => {
         })
     })
 
-    it('deve verificar logins invalidos con status code 400 ', () => {
+    it('deve verificar logins invalidos coM status code 400 ', () => {
         cy.fixture('loginCredentials').then(user => {
 
         cy.logar(user.emailEmBranco).then(res =>{
@@ -70,7 +70,7 @@ describe('Teste dna api serverest', () => {
     /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     })
-    it('cadastrar usuario valido deve possuir status 201 e propriedade message e _id ', () =>{
+    it('deve cadastrar usuario valido deve possuir status 201 e propriedade message e _id ', () =>{
         let usuarioValido = Factory.gerarUsuariosValido()
         
 
@@ -82,7 +82,7 @@ describe('Teste dna api serverest', () => {
         })
     })
     
-    it('buscar usuario por id verificando se possui status 200 ', () =>{
+    it(' deve buscar usuario por id verificando se possui status 200 ', () =>{
         cy.buscarUsuariosPorId(idUsuario).then(res => {
             expect(res.status).to.be.equal(200);
             
@@ -90,7 +90,7 @@ describe('Teste dna api serverest', () => {
         })
     })
 
-    it('cadastrar usuario existente deve possuir status 400 e propriedade message', () =>{
+    it('deve cadastrar usuario existente deve possuir status 400 e propriedade message', () =>{
         
         let usuarioInvalido = Factory.gerarUsuariosInvalido()
         cy.cadastrarUsuario(usuarioInvalido).then(res => {
@@ -102,7 +102,7 @@ describe('Teste dna api serverest', () => {
 //               TESTES DE PRODUTOS
     /// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
-    it('cadastrar produto valido deve possuir status 201 e propriedade message e _id  ', () =>{
+    it('deve cadastrar produto valido deve possuir status 201 e propriedade message e _id  ', () =>{
         
         
         let produto = Factory.gerarProdutoBody(); 
@@ -120,14 +120,14 @@ describe('Teste dna api serverest', () => {
         })
     })
 
-    it('buscar produto por id verificar se possui status code 200 ', () =>{
+    it('ceve buscar produto por id verificar se possui status code 200 ', () =>{
         cy.buscarProdutoPorId(idProduto).then(res => {
             expect(res.status).to.be.equal(200);
 
         })
     })
 
-        it('cadastrar produtos invalidos e retornar status 400 e se posui a propriedade message,nome e descricao', () =>{
+        it('deve cadastrar produtos invalidos e retornar status 400 e se possui a propriedade messageou, nome ou descricao', () =>{
             let produtoExistente = Factory.produtoExistente();let produtoNomeVazio = Factory.produtoNomeVazio()
             let produtoDescricaoVazio = Factory.produtoDescricaoVazio(); let produtoSemNome = Factory.produtoSemNome()
     
@@ -256,7 +256,7 @@ describe('Teste dna api serverest', () => {
             }) 
         })
     })
-    
+
     it('validar contrato GET /usuarios/_id', () => {
         cy.buscarUsuariosPorId(idUsuario).then(res => {
             expect(res.status).to.be.equal(200);
