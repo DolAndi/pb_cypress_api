@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/compassoLeonardo/pb_cypress_api#readme",
   "devDependencies": {
+    "ajv": "^8.6.3",
     "cypress": "^8.6.0",
     "faker": "^5.5.3"
   },

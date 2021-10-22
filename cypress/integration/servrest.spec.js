@@ -1,10 +1,8 @@
 /// <reference types="cypress" />
-
 import Factory from '../dynamics/factory'
-
 var bearer 
 
-describe('Teste na api serverest', () => {
+describe('Testes na api serverest', () => {
     it('Deve trazer um usuário administrador para login', () => {
         cy.fixture('loginCredentials').then((user) => {
             cy.logar(user.valido).then( res => {
@@ -58,7 +56,7 @@ describe('Teste na api serverest', () => {
 
     it('Deve dar erro ao cadastrar usuário já cadastrado' , () => {
 
-        let usuario = Factory.gerarUsuarioInvalido()
+        let usuario = Factory.gerarUsuarioExistente()
 
         cy.cadastrarUsuario(usuario).then( res => {
             expect(res.status).to.be.equal(400)
@@ -66,7 +64,6 @@ describe('Teste na api serverest', () => {
         })
     })
    
-
     it('Deve cadastrar produto' , () => {
 
         let produto = Factory.gerarProdutoBody()
@@ -89,6 +86,90 @@ describe('Teste na api serverest', () => {
         })
     
     })
-}) 
+})
+describe('Validações de contrato', () => {
+    it('Teste de contrato na requisição POST/login' , () => {
+        cy.fixture("loginCredentials").then(user => {
+            cy.logar(user.valido).then(res => {
+                expect(res.status).to.be.equal(200);
+            cy.validarContrato(res, "post_login", 200).then(validacao =>{
+                expect(validacao).to.be.equal("Contrato validado!")
+            }) 
+        })
+        cy.logar(user.senhaEmBranco).then(res => {
+            expect(res.status).to.be.equal(400);
+        cy.validarContrato(res, 'post_login', 400).then(validacao =>{
+            expect(validacao).to.be.equal('Contrato validado!')
+            }) 
+        })
+    })    
+})
+
+    it('Teste de contrato na requisição POST/usuarios', () => {
+        let usuario = Factory.gerarUsuarioBody()
+        let usuarioInvalido = Factory.gerarUsuarioExistente()
+
+        cy.cadastrarUsuario(usuario).then( res => {
+            expect(res.status).to.be.equal(201)
+            cy.validarContrato(res, 'post_usuarios', 201).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato validado!')
+             }) 
+        })
+        cy.cadastrarUsuario(usuarioInvalido).then( res => {
+            expect(res.status).to.be.equal(400)
+            cy.validarContrato(res, 'post_usuarios', 400).then(validacao =>{
+                expect(validacao).to.be.equal('Contrato validado!')
+             })   
+        })
+    })
+
+    it('Teste de contrato na requisição GET/usuarios' , () => {
+        cy.buscarUsuarios().then( res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, 'get_usuarios', 200).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+        })
+     })
+})
+    it('Teste de contrato na requisição POST/produtos' , () => {
+        let produto = Factory.gerarProdutoBody()
+        let produtoExistente = Factory.produtoExistente()
+
+        cy.cadastrarProduto(bearer, produto).then(res => {
+            expect(res.status).to.be.equal(201)       
+            cy.validarContrato(res, 'post_produtos', 201).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+         })
+    })
+        cy.cadastrarProduto(bearer, produtoExistente).then( res => {
+            expect(res.status).to.be.equal(400)
+            cy.validarContrato(res, 'post_produtos', 400).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+        })
+     })
+        cy.cadastrarProduto(produto).then( res => {
+            expect(res.status).to.be.equal(401)
+            cy.validarContrato(res, 'post_produtos', 401).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+        })
+    })
+      // (tive ideias mirabolantes e nenhuma funcionou na execução deste teste)
+
+         //cy.cadastrarProduto(bearer,produto).then( res => {
+           //expect(res.status).to.be.equal(403)
+           // cy.validarContrato(res, 'post_produtos', 403).then(validacao => {
+              // expect(validacao).to.be.equal('Contrato validado!')
+        //})
+    //})     
+})
 
 
+    it('Teste de contrato na requisição GET/produtos' , () => {
+        cy.buscarProdutos().then( res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res, 'get_produtos', 200).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })      
+})

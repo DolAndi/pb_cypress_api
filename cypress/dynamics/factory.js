@@ -11,6 +11,23 @@ export default class factory{
         }
     }
 
+    static gerarProdutoSemNome() {
+        return {
+            "preco": faker.commerce.price(),
+            "descricao": faker.commerce.productDescription(),
+            "quantidade": faker.datatype.number()
+        }
+    }
+
+    static produtoExistente() {
+        return {
+            "nome": 'CD Supermcombo',
+            "preco": 45,
+            "descricao": "CD",
+            "quantidade": 300
+        }
+    }
+
     static gerarUsuarioBody() {
         return {
                 "nome": `${faker.name.firstName()} ${faker.name.lastName()}`,
@@ -20,7 +37,7 @@ export default class factory{
         }
     }
 
-    static gerarUsuarioInvalido() {
+    static gerarUsuarioExistente() {
         return {
             "nome": "Fulano da Silva",
             "email": "beltrano@qa.com.br",
@@ -28,15 +45,16 @@ export default class factory{
             "administrador": "true"
         }
     }
-    static gerarProdutoSemNome() {
+
+    static usuarioSemAdmin() {
         return {
-            "preco": faker.commerce.price(),
-            "descricao": faker.commerce.productDescription(),
-            "quantidade": faker.datatype.number()
+            "nome": "Fulanito da Silva",
+            "email": "fulanosemadmin@qa.com",
+            "password": "teste",
+            "administrador": "false"
         }
     }
 }
-
 
     
    
