@@ -58,4 +58,18 @@ export default class Factory {
             "administrador": faker.datatype.boolean().toString(), //true ou false => "true" or "false"
         }
     }
+
+    static gerarLogin() {
+        return{
+            "email": "Jennie.Emmerich11@example.net",
+            "password": "VSu6cXsmrTSw3CN",
+        }
+    }
+
+    static gerarLoginEmailOuSenhaInv() {
+        return{
+            "email": "Fulano@qa.com",
+            "password": "123",
+        }
+    }
 }

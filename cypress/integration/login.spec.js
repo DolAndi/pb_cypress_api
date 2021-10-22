@@ -73,19 +73,34 @@ describe('Testes com POST login', () => {
 //
 //                                        //Validações de contrato
 //
-it('Deve realizar teste de contrato sobre a requisição POST na rota /login - Login realizado com sucesso', () => {
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /login - Login realizado com sucesso', () => {
 
-    let usuario = Factory.gerarUsuarioCompleto();
+    let usuario = Factory.gerarLogin();
     
     //console.log(product)
 
     
     cy.fazerLogin(usuario).then(res => {
         expect(res.status).to.be.equal(200)
-        cy.validarContrato(res, "post_login", 201).then(validacao => {
+        cy.validarContrato(res, "post_login", 200).then(validacao => {
             expect(validacao).to.be.equal('Contrato validado!')
             })
         })
-})
+    })
 
+    it('Deve realizar teste de contrato sobre a requisição POST na rota /login - E-mail e/ou senha inválidos', () => {
+
+        let usuario = Factory.gerarLoginEmailOuSenhaInv();
+        
+        //console.log(product)
+    
+        //Não segue a doc do swagger
+
+        cy.fazerLogin(usuario).then(res => {
+            expect(res.status).to.be.equal(401)
+            cy.validarContrato(res, "post_login", 401).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+            })
+        })
+    })
 })
