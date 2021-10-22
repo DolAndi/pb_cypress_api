@@ -21,7 +21,7 @@ export default class factory{
 
     static produtoExistente() {
         return {
-            "nome": 'CD Supermcombo',
+            "nome": 'CD Adeus Aurora',
             "preco": 45,
             "descricao": "CD",
             "quantidade": 300
@@ -46,7 +46,7 @@ export default class factory{
         }
     }
 
-    static usuarioSemAdmin() {
+    static gerarUsuarioSemAdmin() {
         return {
             "nome": "Fulanito da Silva",
             "email": "fulanosemadmin@qa.com",

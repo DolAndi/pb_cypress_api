@@ -50,6 +50,13 @@ Cypress.Commands.add('buscarUsuarios', (usuario) => {
     })
 })
 
+Cypress.Commands.add('buscarUsuariosId', (id) => {
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/usuarios/${id}`,
+        failOnStatusCode: false,
+    })
+})
 
 //PRODUTO
 Cypress.Commands.add('cadastrarProduto', (bearer, produto) => {
@@ -73,6 +80,14 @@ Cypress.Commands.add('buscarProdutos', () => {
     })
 })
 
+Cypress.Commands.add('buscarProdutosId', (id) => {
+    return cy.request({
+        method: 'GET',
+        url: `${Cypress.env('base_url')}/produtos/${id}`,
+        failOnStatusCode: false,
+    })
+})
+
 //VALIDAÇÃO DE CONTRATO
 Cypress.Commands.add('validarContrato', (res, schema, status) => {
     cy.fixture(`schema/${schema}/${status}.json`).then( schema => {
@@ -85,7 +100,7 @@ Cypress.Commands.add('validarContrato', (res, schema, status) => {
                 let err = validate.errors[each]
                 errors += `\n${err.instancePath} ${err.message}, but receive ${typeof err.data}`
             }
-            throw new Error('Contrato inválido, por favor verifique!', errors)
+            throw new Error('Contrato inválido, por favor verifique!', + errors)
          }
          return 'Contrato validado!'
     })

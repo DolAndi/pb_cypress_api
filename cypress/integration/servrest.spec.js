@@ -1,16 +1,26 @@
 /// <reference types="cypress" />
 import Factory from '../dynamics/factory'
-var bearer 
+var bearer
+var tokenSemAdm 
+var usuarioId
+var produtosId
 
 describe('Testes na api serverest', () => {
-    it('Deve trazer um usuário administrador para login', () => {
+    it('Deve trazer um usuário para login', () => {
         cy.fixture('loginCredentials').then((user) => {
             cy.logar(user.valido).then( res => {
                 expect(res.status).to.be.equal(200)
                 expect(res.body).to.have.property('authorization')
                 bearer = res.body.authorization
             })
-        }) 
+        })
+        cy.fixture('loginCredentials').then((user) => {
+            cy.logar(user.semAdmin).then( res => {
+                expect(res.status).to.be.equal(200)
+                expect(res.body).to.have.property('authorization')
+                tokenSemAdm = res.body.authorization
+            })
+        })
     })
 
     it('Deve dar erro ao logar com possíveis erros de credenciais', () => {
@@ -131,6 +141,7 @@ describe('Validações de contrato', () => {
         })
      })
 })
+
     it('Teste de contrato na requisição POST/produtos' , () => {
         let produto = Factory.gerarProdutoBody()
         let produtoExistente = Factory.produtoExistente()
@@ -153,14 +164,13 @@ describe('Validações de contrato', () => {
                 expect(validacao).to.be.equal('Contrato validado!')
         })
     })
-      // (tive ideias mirabolantes e nenhuma funcionou na execução deste teste)
 
-         //cy.cadastrarProduto(bearer,produto).then( res => {
-           //expect(res.status).to.be.equal(403)
-           // cy.validarContrato(res, 'post_produtos', 403).then(validacao => {
-              // expect(validacao).to.be.equal('Contrato validado!')
-        //})
-    //})     
+         cy.cadastrarProduto(tokenSemAdm,produto).then( res => {
+           expect(res.status).to.be.equal(403)
+            cy.validarContrato(res, 'post_produtos', 403).then(validacao => {
+                expect(validacao).to.be.equal('Contrato validado!')
+        })
+    })     
 })
 
 
