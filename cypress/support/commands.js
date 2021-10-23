@@ -65,12 +65,12 @@ Cypress.Commands.add("buscarProdutos", () => {
     })
 })
 
-Cypress.Commands.add("buscarNoCarrinho", (id, precoTotal, quantidadeTotal, idUsuario) => {
+Cypress.Commands.add("buscarCarrinho", (carrinho) => {
     cy.request({
         method: "GET",
         url: `${Cypress.env("base_url")}/carrinhos`,
         failOnStatusCode: false,
-        body: id, precoTotal, quantidadeTotal, idUsuario
+        body: carrinho
     })
 })
 

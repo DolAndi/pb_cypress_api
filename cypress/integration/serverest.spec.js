@@ -3,6 +3,7 @@
 import Factory from "../dynamics/factory.js"
 
 var idUsuario
+var carrinho
 var bearer
 
 describe("REDO do Zero dos Testes para API ServeRest", () => {
@@ -120,16 +121,47 @@ describe("REDO do Zero dos Testes para API ServeRest", () => {
     })
 
     describe("Testes para CARRINHO", () => {
-        it("Deve utilizar GET para listar uma lista dos itens no carrinho do usuario requesitado", () => {
-            cy.fixture("loginCredentials").then((usuario) => {
-                cy.pegarUserExpecifico(usuario.valido).then( res => {
-                    idUsuario = res.body.usuarios[0]._id;
-                    cy.buscarNoCarrinho(idUsuario).then (res => {
-                        expect(res.statusCode === 200)
-                    })
-                })
+        it("Deve utilizar GET para listar os todos os carrinhos disponiveis", () => {
+            cy.buscarCarrinho().then (res => {
+                expect(res.statusCode === 200)
+                expect(res.body).to.have.all.keys("quantidade", "carrinhos")
+                expect(res.body.carrinhos[0]).to.have.property("produtos")
+                expect(res.body.carrinhos[0]).to.have.property("precoTotal")
+                expect(res.body.carrinhos[0]).to.have.property("quantidadeTotal")
+                expect(res.body.carrinhos[0]).to.have.property("idUsuario")
+                expect(res.body.carrinhos[0]).to.have.property("_id")
+                expect(res.body.carrinhos[0].produtos).to.be.a("array")
+                expect(res.body.carrinhos[0].precoTotal).to.be.a("number")
+                expect(res.body.carrinhos[0].quantidadeTotal).to.be.a("number")
+                expect(res.body.carrinhos[0]._id).to.be.a("string")
+                //expect(res.body.carrinhos[0].idUsusario).to.be.a("string")
             })
         })
 
+    //!Second Fail
+        //it("Deve utilizar GET para listar itens no carrinho do usuario requesitado", () => {
+        //    cy.fixture("loginCredentials").then( usuario => {
+        //        cy.pegarUserExpecifico(usuario.valido).then ( res => {
+        //            idUsuario = res.body.usuarios[0]._id
+        //            cy.wrap(carrinho[id, precoTotal, quantidadeTotal, idUsuario])
+        //             cy.buscarCarrinho(cy.get(`.carrinho`).within(("$idUsuario"))).then ( res => {
+        //                expect(res.statusCode === 200)
+        //            })
+        //        })
+        //
+        //    })
+        //})
+    //!First fail
+            //cy.fixture("loginCredentials").then((usuario) => {
+                //cy.pegarUserExpecifico(usuario.valido).then( res => {
+                    //idUsuario = res.body.usuarios[0]._id;
+                    ///carrinhoUsuario tem que ser um objeto com 4 itens _id*carrinho*, precoTotal, quantidadeTotal e idUsuario(iserir resultado acima) como faço isso!?
+                    //cy.wrap("carrinhoUsuario": {_id: string, procoTotal: integer, quantidadeTotal: integer, idUsuario: idUsuario})
+                    //cy.buscarCarrinho(cy.get("carrinhoUsuario")).then (res => {
+                        //expect(res.statusCode === 200)
+
+
+                    //})
+                //'})
     })
 })
