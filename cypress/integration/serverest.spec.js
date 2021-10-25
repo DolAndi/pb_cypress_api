@@ -2,7 +2,7 @@
 import Factory from '../dynamics/factory'
 var bearer
 
-describe('Testes na api serverest', () => {
+describe('Testes de Login:', () => {
     it('Deve trazer um usuário administrador para login (200)', () => {
       //  cy.buscarUsuarioAdmin().then( res => {
         //    cy.wrap({email: res.email, password: res.password}).as('usuarioParaLogin')
@@ -43,6 +43,8 @@ describe('Testes na api serverest', () => {
         })
 
     })
+})
+describe("Testes de Usuario:", ()=>{
     it('Deve Cadastrar um usuário (201)"', ()=>{
         let usuario = Factory.gerarUsuarioBody()
 
@@ -98,6 +100,8 @@ describe('Testes na api serverest', () => {
             })
         })
     })
+})
+describe("testes de Produto:", ()=>{
 
     it('Deve cadastrar um produto com Sucesso (201)', () =>{
         let produto = Factory.gerarProdutoBody()
