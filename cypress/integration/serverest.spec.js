@@ -90,16 +90,4 @@ describe('Teste serverest', () => {
         })
     })
 
-    it('Deve realizar teste de contrato sobre a requisição get na rota usuários, passando valor admin true', () => {
-            
-        cy.buscarUsuarioAdmin().then( res => {
-            expect(res).to.have.property('nome')
-            console.log(res)
-
-            
-            cy.validarContrato(res, "get_usuarios", 200).then( validacao => {
-                expect(validacao).to.be.equal('Contrato Validado!')
-            }) 
-        })    
-    })
 })

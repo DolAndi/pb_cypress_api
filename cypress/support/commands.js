@@ -30,18 +30,6 @@ Cypress.Commands.add("logar", (user) => {
     });
 });
   
-Cypress.Commands.add("cadastrarCarrinho", (bearer, produto) => {
-    return cy.request({
-        method: "POST",
-        url: `${Cypress.env("base_url")}/carrinho`,
-        failOnStatusCode: false,
-        body: produto,
-        headers: {
-        Authorization: bearer,
-        },
-    });
-});
-  
 Cypress.Commands.add("cadastrarProduto", (bearer, produto) => {
     return cy.request({
         method: "POST",
