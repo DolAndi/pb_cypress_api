@@ -48,7 +48,7 @@ Cypress.Commands.add("cadastrarUsuario", (usuario) =>{
 Cypress.Commands.add("cadastrarProduto", (bearer, produto) =>{
     return cy.request({
         method: "POST",
-        url: `${Cypress.env('base_url')}/produtos`,
+        url: `${Cypress.env("base_url")}/produtos`,
         failOnStatusCode: false,
         body: produto,
           headers: {Authorization: bearer}
@@ -58,7 +58,15 @@ Cypress.Commands.add("cadastrarProduto", (bearer, produto) =>{
 Cypress.Commands.add("buscarProdutos", () =>{
     return cy.request({
         method: "GET",
-        url: `${Cypress.env('base_url')}/produtos`,
+        url: `${Cypress.env("base_url")}/produtos`,
+        failOnStatusCode: false
+    })
+})
+
+Cypress.Commands.add("buscarProdutoId", (id) =>{
+    return cy.request({
+        method: "GET",
+        url: `${Cypress.env("base_url")}/produtos/${id}`,
         failOnStatusCode: false
     })
 })
@@ -66,7 +74,15 @@ Cypress.Commands.add("buscarProdutos", () =>{
 Cypress.Commands.add("buscarUsuarios", () =>{
     return cy.request({
         method: "GET",
-        url: `${Cypress.env('base_url')}/usuarios`,
+        url: `${Cypress.env("base_url")}/usuarios`,
+        failOnStatusCode: false
+    })
+})
+
+Cypress.Commands.add("buscarUsuariosId", (id) =>{
+    return cy.request({
+        method: "GET",
+        url: `${Cypress.env("base_url")}/usuarios/${id}`,
         failOnStatusCode: false
     })
 })
