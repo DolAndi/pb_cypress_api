@@ -6,6 +6,8 @@ var bearer
 
 describe("Testes na API ServeRest", () => {
 
+//LOGIN
+
     it("Deve trazer um usuario valido e uma sequencia de invalidos", () => {
         cy.fixture("loginCredentials").then((user) => {
             cy.logar(user.valido).then( res => {
@@ -32,12 +34,15 @@ describe("Testes na API ServeRest", () => {
         })
     })
 
+//USUARIOS
+
     it("Deve efetuar um cadastro valido com status code 201 e propriedade message", () => {
         let usuarioValido = Factory.gerarUsuarioValido()
 
         cy.cadastrarUsuario(usuarioValido).then(res => {
             expect(res.status).to.be.equal(201);
             expect(res.body).has.property("message").to.be.equal("Cadastro realizado com sucesso")
+            expect(res.body).has.property("_id")
         })
     })
 
@@ -47,8 +52,15 @@ describe("Testes na API ServeRest", () => {
         cy.cadastrarUsuario(usuarioInvalido).then(res => {
             expect(res.status).to.be.equal(400);
         })
-
     })
+
+    it("Deve buscar usuario por id e verificar status code 200", () =>{
+        cy.buscarUsuariosId(idUsuario).then(res => {
+            expect(res.status).to.be.equal(200);
+        })
+    })
+
+//PRODUTOS
 
     it("Deve cadastrar produto corretamente possuindo status code 201 e exibir propriedade message", () => {
 
@@ -79,12 +91,17 @@ describe("Testes na API ServeRest", () => {
             expect(res.body).has.property("descricao").equal("descricao não pode ficar em branco")
         })
     })
+    it("Deve buscar produto por id e verificar status code 200", () =>{
+        cy.buscarProdutoPorId(idProduto).then(res => {
+            expect(res.status).to.be.equal(200);
+        })
+    })
 
-
-    //
+    ///////////////////////
     //Validações Contratos
-    //
+    ///////////////////////
 
+    //validações em GET
 
     it("Deve realizar teste de contrato sobre a requisição GET /produtos", () => {
         cy.buscarProdutos().then( res => {
@@ -104,6 +121,8 @@ describe("Testes na API ServeRest", () => {
             
         })
     })
+
+    //validações em POST
 
     it("Deve realizar teste de contrato sobre a requisição POST /produtos", () =>{
         let produto = Factory.gerarProduto(); let produtoExistente = Factory.produtoExistente();
