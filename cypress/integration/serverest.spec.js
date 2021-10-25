@@ -6,7 +6,7 @@ var bearer
 
 describe("Testes na API ServeRest", () => {
 
-//LOGIN
+    //LOGIN
 
     it("Deve trazer um usuario valido e uma sequencia de invalidos", () => {
         cy.fixture("loginCredentials").then((user) => {
@@ -34,7 +34,7 @@ describe("Testes na API ServeRest", () => {
         })
     })
 
-//USUARIOS
+    //USUARIOS
 
     it("Deve efetuar um cadastro valido com status code 201 e propriedade message", () => {
         let usuarioValido = Factory.gerarUsuarioValido()
@@ -60,7 +60,7 @@ describe("Testes na API ServeRest", () => {
         })
     })
 
-//PRODUTOS
+    //PRODUTOS
 
     it("Deve cadastrar produto corretamente possuindo status code 201 e exibir propriedade message", () => {
 
