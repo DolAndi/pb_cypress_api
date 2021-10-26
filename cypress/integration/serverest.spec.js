@@ -58,15 +58,21 @@ describe('teste na api serverest', () => {
         })
     })
 
-    it('deve cadastrar um produto invalido', () => {
-        cy.cadastrarProduto(bearer, produto).then ( res => {
-            expect(res.status).to.equal(201)
-            expect(res.body).to.have.all.keys('message', '_id')
+    //it('Deve cadastrar um produto invalido', () => {
+        //cy.fixture('cadastrarProduto').then(res => {
 
+        //})
+        
+
+
+    it('Deve realizar teste de contrato sobre a requisição GET na rota/produto', () => {
+        cy.buscarProdutos().then( res => {
+            expect(res.status).to.be.equal(200)
+            cy.validarContrato(res,'get_produtos', 200).then( validacao =>{
+                expect(validacao).to.be.equal('contrato validado!')
+            })
         })
-
     })
-
 
 })
 
